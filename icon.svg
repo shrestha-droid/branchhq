@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
     <radialGradient id="sky" cx="30%" cy="18%" r="95%">
-      <stop offset="0" stop-color="#1b2140"/>
+      <stop offset="0" stop-color="#211d4a"/>
       <stop offset="0.55" stop-color="#0b0e1a"/>
       <stop offset="1" stop-color="#05060b"/>
     </radialGradient>
     <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#ffd9a0" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#ffb15c" stop-opacity="0"/>
+      <stop offset="0" stop-color="#c9c7ff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#6e6cf0" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#sky)"/>
@@ -21,5 +21,5 @@
   </g>
   <text x="498" y="712" text-anchor="middle" font-family="New York, Iowan Old Style, Georgia, serif" font-size="560" font-weight="500" fill="#eceff7">B</text>
   <circle cx="735" cy="318" r="70" fill="url(#glow)"/>
-  <circle cx="735" cy="318" r="15" fill="#ffe2b8"/>
+  <circle cx="735" cy="318" r="15" fill="#e6e4ff"/>
 </svg>
