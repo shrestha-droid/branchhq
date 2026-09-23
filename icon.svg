@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="sky" cx="30%" cy="18%" r="95%">
+      <stop offset="0" stop-color="#1b2140"/>
+      <stop offset="0.55" stop-color="#0b0e1a"/>
+      <stop offset="1" stop-color="#05060b"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd9a0" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffb15c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#sky)"/>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="185" fill="none" stroke="#bccdff" stroke-opacity="0.16" stroke-width="3"/>
+  <g fill="#d6e1ff">
+    <circle cx="250" cy="260" r="4" opacity="0.7"/>
+    <circle cx="770" cy="220" r="3" opacity="0.5"/>
+    <circle cx="800" cy="760" r="4" opacity="0.6"/>
+    <circle cx="230" cy="790" r="3" opacity="0.45"/>
+    <circle cx="690" cy="330" r="2.5" opacity="0.5"/>
+  </g>
+  <text x="498" y="712" text-anchor="middle" font-family="New York, Iowan Old Style, Georgia, serif" font-size="560" font-weight="500" fill="#eceff7">B</text>
+  <circle cx="735" cy="318" r="70" fill="url(#glow)"/>
+  <circle cx="735" cy="318" r="15" fill="#ffe2b8"/>
+</svg>
