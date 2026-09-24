@@ -37,7 +37,7 @@
   main, nav, footer { position: relative; z-index: 1; }
 
   /* Nav */
-  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(4, 5, 10, 0.55); border-bottom: 1px solid transparent; transition: border-color .3s; }
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(4, 5, 10, 0.92); border-bottom: 1px solid transparent; transition: border-color .3s; }
   nav.scrolled { border-bottom-color: var(--line); }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
   .brand { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.2em; text-decoration: none; }
@@ -575,8 +575,11 @@
   // --- The sky: drifting stars, nearer ones brighter and faster, following the pointer a little.
   const canvas = document.getElementById('sky'), ctx = canvas.getContext('2d')
   let w, h, stars = [], px = 0, py = 0, sx = 0, sy = 0
+  // Each bright star's glow is drawn once and stamped, not rebuilt per frame.
+  const sprite = rgb => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'); const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c }
+  const glowWarm = sprite('200,196,255'), glowCool = sprite('214,225,255')
   function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2)
+    const dpr = Math.min(devicePixelRatio || 1, 1.25)
     w = innerWidth; h = innerHeight; canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     stars = Array.from({ length: Math.round(Math.min(320, w * h / 5200)) }, () => {
       const z = Math.pow(Math.random(), 1.7)
@@ -599,9 +602,8 @@
       ctx.fillStyle = s.warm ? `rgba(200,196,255,${a})` : `rgba(214,225,255,${a})`
       ctx.beginPath(); ctx.arc(x, y, s.r, 0, 6.283); ctx.fill()
       if (s.z > .94) {
-        const g = ctx.createRadialGradient(x, y, 0, x, y, s.r * 8)
-        g.addColorStop(0, s.warm ? `rgba(200,196,255,${a * .5})` : `rgba(214,225,255,${a * .5})`); g.addColorStop(1, 'rgba(0,0,0,0)')
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, s.r * 8, 0, 6.283); ctx.fill()
+        const R = s.r * 8
+        ctx.globalAlpha = a * .5; ctx.drawImage(s.warm ? glowWarm : glowCool, x - R, y - R, R * 2, R * 2); ctx.globalAlpha = 1
       }
     }
     if (!reduce && !document.hidden) requestAnimationFrame(frame)
