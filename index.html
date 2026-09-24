@@ -234,6 +234,28 @@
   .wire { width: 60px; height: 2px; background: repeating-linear-gradient(90deg, var(--warm) 0 6px, transparent 6px 12px); background-size: 24px 2px; animation: flow 1.2s linear infinite; opacity: .7; }
   @keyframes flow { to { background-position: 24px 0; } }
 
+  /* Lifecycle */
+  .life { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; counter-reset: s; }
+  @media (max-width: 900px) { .life { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .life { grid-template-columns: 1fr; } }
+  .life .card { padding-top: 22px; }
+  .life .tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(139,136,240,0.14); color: var(--warm); margin-bottom: 14px; }
+  .life .card.now { border-color: rgba(139,136,240,0.35); }
+  .pulse { display: inline-flex; gap: 3px; margin-top: 14px; }
+  .pulse i { width: 6px; height: 16px; border-radius: 2px; background: rgba(110,231,168,0.75); }
+  .pulse i.bad { background: rgba(251,143,163,0.85); }
+  /* Proof on paper */
+  .paper { margin-top: 56px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 900px) { .paper { grid-template-columns: 1fr; } }
+  .paper img { width: 100%; aspect-ratio: 777 / 830; object-fit: cover; object-position: top; border-radius: 14px; box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08); transform: rotate(-1.2deg); background: #fff; }
+  /* Security */
+  .sec { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 900px) { .sec { grid-template-columns: 1fr; } }
+  .sec ul { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 9px; }
+  .sec li { position: relative; padding-left: 24px; font-size: 14.5px; color: var(--muted); }
+  .sec li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .sec li b { color: var(--ink); font-weight: 600; }
+
   /* Install + CTA */
   .tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; margin-top: 40px; }
   .tabs button { font: inherit; font-size: 14px; color: var(--muted); background: none; border: 0; padding: 8px 18px; border-radius: 8px; cursor: pointer; }
@@ -268,6 +290,7 @@
     <a class="brand" href="./"><img src="icon.png" alt="">BRANCH HQ</a>
     <div class="links">
       <a href="#team">How it works</a>
+      <a href="#lifecycle">After handover</a>
       <a href="#projects">Existing code</a>
       <a href="#proof">Proof</a>
       <a href="#install">Install</a>
@@ -366,12 +389,38 @@
     </div>
   </section>
 
+  <!-- ============ LIFECYCLE ============ -->
+  <section id="lifecycle" class="wrap">
+    <div class="kicker reveal">After handover</div>
+    <h2 class="reveal d1">Software is never finished. <em>Neither is the proof.</em></h2>
+    <p class="intro reveal d2">Sites change every few weeks and break quietly between changes. Branch HQ stays with the project: every later change is checked like the first build, and the live site keeps being checked, so the proof grows month after month.</p>
+    <div class="life">
+      <div class="card reveal"><span class="tag">01 · Build</span><h3>From a description</h3><p>Planned, built, security-scanned, reviewed, started and tested before you see it.</p></div>
+      <div class="card reveal d1"><span class="tag">02 · Deliver</span><h3>With a proof document</h3><p>A Proof of delivery PDF for the client: every check it passed, verifiable by anyone.</p></div>
+      <div class="card reveal d2"><span class="tag">03 · Maintain</span><h3>Every change, proven</h3><p>The saved project opens in Projects. Each change is tested, reviewed, previewed and undoable.</p></div>
+      <div class="card now reveal d3"><span class="tag">04 · Keep proving</span><h3>The live site, checked</h3><p>Daily or weekly checks that it still works, recorded with an independent timestamp.</p><div class="pulse" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i class="bad"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    </div>
+  </section>
+
+  <!-- ============ PROOF ON PAPER ============ -->
+  <section class="wrap">
+    <div class="paper">
+      <div>
+        <div class="kicker reveal">The proof, on paper</div>
+        <h2 class="reveal d1">Hand your client <em>evidence</em>, not a promise.</h2>
+        <p class="intro reveal d2">One click makes a Proof of delivery: what was asked for, what was built, each part's security scan, independent review and live test, the protections found in the code, and how anyone can verify the record themselves. It only ever states what the record shows — an unconfirmed part says so.</p>
+      </div>
+      <img class="reveal d2" src="proof-sample.png" alt="A Proof of delivery document for a clinic booking site" loading="lazy">
+    </div>
+  </section>
+
   <!-- ============ EXISTING CODE ============ -->
   <section id="projects" class="wrap">
     <div class="kicker reveal">Change code you already have</div>
     <h2 class="reveal d1">Point it at your repo. <em>Approve</em> the diff.</h2>
     <div class="split">
       <ul class="points reveal">
+        <li><div class="dot">?</div><div><b>Ask first, or change</b><span>Ask questions about the code and get plain answers — nothing changes. Switch to Change when you want something done.</span></div></li>
         <li><div class="dot">1</div><div><b>Every changed line, before anything moves</b><span>Your folder stays untouched until you approve. Files with your own unsaved work are never touched.</span></div></li>
         <li><div class="dot">2</div><div><b>Your own tests, on the change</b><span>Run in a separate copy, per package in a monorepo. A failure is only blamed on the change if the tests passed without it.</span></div></li>
         <li><div class="dot">3</div><div><b>See it running, before and after</b><span>One click starts your project with the change applied, next to how it is now.</span></div></li>
@@ -413,6 +462,29 @@
     </div>
     <div class="cmd reveal d3">$ openssl ts -verify -digest 5f72…c611 -in token.tsr -CAfile cert.pem
 <span class="ok">Verification: OK</span></div>
+  </section>
+
+  <!-- ============ SECURITY ============ -->
+  <section class="wrap">
+    <div class="kicker reveal">Secure by default</div>
+    <h2 class="reveal d1">Protections that are <em>enforced</em>, not requested.</h2>
+    <p class="intro reveal d2">Asking an AI to "be secure" is not a guarantee. These are built into every server it makes, or checked on every change — code that fails them does not ship.</p>
+    <div class="sec">
+      <div class="card reveal"><h3>Built into every server</h3><ul>
+        <li><b>Security headers</b> on every response</li>
+        <li><b>Cross-site access locked</b> to the site's own address</li>
+        <li><b>Error details hidden</b> from visitors, kept in the server log</li>
+        <li><b>Staff login</b> checked on the server, never trusted from the browser</li>
+        <li><b>Sensitive fields encrypted</b> in the database</li>
+      </ul></div>
+      <div class="card reveal d1"><h3>Blocked before it ships</h3><ul>
+        <li><b>Keys or passwords</b> written into the code</li>
+        <li><b>Passwords stored</b> without hashing</li>
+        <li><b>Database queries</b> a visitor could inject into</li>
+        <li><b>Permissions</b> the browser grants itself</li>
+        <li><b>Keys hiding in git history</b>, flagged when you open a project</li>
+      </ul></div>
+    </div>
   </section>
 
   <!-- ============ MODELS ============ -->
