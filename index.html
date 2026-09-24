@@ -340,7 +340,7 @@
     <div class="stats reveal">
       <div class="stat"><div class="n">6</div><p>AI specialists, each with one job</p></div>
       <div class="stat"><div class="n">4</div><p>checks on every build before you see it</p></div>
-      <div class="stat"><div class="n">23<sup>/27</sup></div><p>builds verified end to end in our last three measured batches</p></div>
+      <div class="stat"><div class="n">14<sup>/21</sup></div><p>builds verified end to end in our last three measured batches</p></div>
       <div class="stat"><div class="n">0</div><p>bytes of your code leave the building on a local model</p></div>
     </div>
   </header>
@@ -505,12 +505,12 @@
     <div class="kicker reveal">Measured, not claimed</div>
     <h2 class="reveal d1">We test it the <em>hard</em> way.</h2>
     <div class="chart" id="chart">
-      <div class="reveal"><div class="big">23<span>/27</span></div><p class="intro" style="margin-top:14px">builds verified end to end across our last three batches. Same prompt, ten times each, nothing fixed in between, and a pass only counts if a real booking was saved and read back.</p></div>
+      <div class="reveal"><div class="big">14<span>/21</span></div><p class="intro" style="margin-top:14px">builds verified end to end across our last three batches. Same prompt, ten times each, nothing fixed in between, and a pass only counts if a real booking was saved and read back.</p></div>
       <div class="bars reveal d2">
-        <div class="bar"><div class="lbl">Batch 17<b>9 / 10</b></div><div class="track"><div class="fill" style="--v:.9"></div></div></div>
         <div class="bar"><div class="lbl">Batch 18<b>7 / 8</b></div><div class="track"><div class="fill" style="--v:.875"></div></div></div>
-        <div class="bar"><div class="lbl">Batch 20 · latest<b>7 / 9</b></div><div class="track"><div class="fill" style="--v:.778"></div></div></div>
-        <p class="foot">One free model (Gemini Flash-Lite) for every specialist. Three runs are excluded because the model provider timed out mid-build (two in batch 18, one in batch 20). Batch 19 was stopped when the provider's daily quota ran out and was never scored. The same test runs again before every claim we make.</p>
+        <div class="bar"><div class="lbl">Batch 20<b>7 / 9</b></div><div class="track"><div class="fill" style="--v:.778"></div></div></div>
+        <div class="bar"><div class="lbl">Batch 21 · latest<b>0 / 4</b></div><div class="track"><div class="fill" style="--v:0"></div></div></div>
+        <p class="foot">One free Gemini model for every specialist. Runs the model provider cut off mid-build (a timeout or a rate limit) are excluded: two in batch 18, one in batch 20, six in batch 21. Batch 21's four failures all traced to two bugs in our own project template, not in the generated code; both are fixed, and the next batch shows whether that held. Batch 19 was stopped when the provider's daily quota ran out and was never scored. The same test runs again before every claim we make.</p>
       </div>
     </div>
   </section>
