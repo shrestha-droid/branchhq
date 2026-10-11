@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --sky: #04050a; --ink: #eef1f8; --muted: #9097ad; --faint: #5f667d;
@@ -21,6 +21,7 @@
     --serif: "Instrument Serif", ui-serif, Georgia, serif;
     --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --pixel: "Silkscreen", "JetBrains Mono", ui-monospace, monospace;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -51,7 +52,7 @@
   /* Hero */
   .hero { text-align: center; padding-top: 96px; padding-bottom: 40px; }
   .badge { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 13px; color: var(--muted); background: rgba(255,255,255,0.02); }
-  .badge b { font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: rgba(139, 136, 240, 0.14); color: var(--warm); }
+  .badge b { font-family: var(--pixel); font-weight: 400; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: rgba(139, 136, 240, 0.14); color: var(--warm); }
   h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 10.5vw, 132px); line-height: 0.95; letter-spacing: -0.025em; margin: 28px 0 0; }
   h1 .line { display: block; }
   h1 em { font-style: italic; background: linear-gradient(100deg, #dcdaff 10%, var(--warm) 45%, #6e6cf0 90%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 0.06em; }
@@ -110,19 +111,17 @@
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 110px; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; background: var(--line); }
   @media (max-width: 820px) { .stats { grid-template-columns: repeat(2, 1fr); } }
   .stat { background: rgba(8, 10, 17, 0.92); padding: 30px 26px; }
-  .stat .n { font-family: var(--serif); font-size: clamp(44px, 5vw, 62px); line-height: 1; letter-spacing: -0.02em; }
+  .stat .n { font-family: var(--pixel); font-size: clamp(36px, 4vw, 50px) !important; letter-spacing: 0 !important; font-size: clamp(44px, 5vw, 62px); line-height: 1; letter-spacing: -0.02em; }
   .stat .n sup { font-size: 0.4em; color: var(--warm); vertical-align: top; margin-left: 2px; }
   .stat p { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
 
   /* Sections */
   section.wrap { padding-top: 150px; }
-  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm); }
+  .kicker { font-family: var(--pixel); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm); }
+  .kicker::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: var(--warm); box-shadow: 2px 2px 0 #3b3a8a; vertical-align: 1px; }
   h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.4vw, 80px); line-height: 1; letter-spacing: -0.02em; margin: 18px 0 0; max-width: 900px; }
   h2 em { font-style: italic; color: var(--warm); }
   .intro { margin: 24px 0 0; max-width: 640px; font-size: 18px; color: var(--muted); }
-.office-loop { margin: 56px 0 8px; }
-  .office-loop img { display: block; width: 100%; max-width: 642px; height: auto; image-rendering: pixelated; border-radius: 10px; box-shadow: 0 30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07); }
-  .office-loop figcaption { margin-top: 14px; max-width: 642px; font-size: 13.5px; line-height: 1.6; color: #8b91a7; }
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1s cubic-bezier(.2,.7,.1,1), transform 1s cubic-bezier(.2,.7,.1,1); }
   .reveal.in { opacity: 1; transform: none; }
   .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; } .d3 { transition-delay: .24s; } .d4 { transition-delay: .32s; } .d5 { transition-delay: .4s; }
@@ -199,7 +198,8 @@
   .cmd .ok { color: var(--green); }
 
   /* Models */
-  .models { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .models { margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .models { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 900px) { .models { grid-template-columns: 1fr 1fr; } }
   .model .tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 6px; margin-top: 16px; }
   .model .tag.cloud { background: rgba(126,162,255,0.12); color: var(--blue); }
@@ -209,7 +209,7 @@
   /* Chart */
   .chart { margin-top: 56px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: end; }
   @media (max-width: 900px) { .chart { grid-template-columns: 1fr; } }
-  .big { font-family: var(--serif); font-size: clamp(90px, 14vw, 180px); line-height: .85; letter-spacing: -0.03em; }
+  .big { font-family: var(--pixel); font-size: clamp(76px, 11vw, 140px); line-height: .9; letter-spacing: 0; color: var(--ink); text-shadow: 6px 6px 0 rgba(94,92,230,0.35); }
   .big span { color: var(--faint); font-size: .45em; }
   .bars { display: grid; gap: 18px; }
   .bar .lbl { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--muted); margin-bottom: 8px; }
@@ -269,6 +269,35 @@
   ol.steps b { font-family: var(--mono); color: var(--warm); font-weight: 500; }
   ol.steps p { margin: 0; color: var(--muted); font-size: 15px; }
   ol.steps strong { color: var(--ink); font-weight: 600; }
+  /* Pixels: faces drawn from the app's own sprite grid, the office showcase, the proof tiles, the walker. */
+  canvas.pxface { image-rendering: pixelated; display: block; }
+  .av.px { background: #12152a !important; border: 1px solid var(--line-strong); padding: 5px 4px 3px; overflow: hidden; }
+  .av.px canvas { width: 100%; height: auto; }
+  .office-show { margin: 52px 0 0; position: relative; }
+  .office-show .frame { position: relative; display: inline-block; max-width: 100%; padding: 10px; background: #161a2c; box-shadow: 0 0 0 3px #0a0c16, 0 0 0 6px #2a3050, 12px 12px 0 6px rgba(94, 92, 230, 0.28); }
+  .office-show img { display: block; width: 100%; max-width: 962px; height: auto; image-rendering: pixelated; }
+  .office-show .tag { position: absolute; top: -14px; left: 22px; font-family: var(--pixel); font-size: 12px; padding: 4px 10px; background: var(--warm); color: #12112e; box-shadow: 3px 3px 0 #3b3a8a; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 28px; font-size: 14px; color: var(--muted); }
+  .legend i { display: inline-block; width: 12px; height: 9px; margin-right: 8px; vertical-align: 0; }
+  .proofs { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 900px) { .proofs { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .proofs { grid-template-columns: 1fr; } }
+  .proof { background: var(--panel); border: 1px solid var(--line); padding: 24px 22px; position: relative; box-shadow: 6px 6px 0 rgba(94, 92, 230, 0.12); }
+  .proof .v { font-family: var(--pixel); font-size: 40px; line-height: 1; color: var(--ink); }
+  .proof .v small { font-size: .5em; color: var(--warm); margin-left: 4px; }
+  .proof p { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+  .proof .when { display: block; margin-top: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+  .evidence { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 14px; background: var(--line); border: 1px solid var(--line); }
+  @media (max-width: 560px) { .evidence { grid-template-columns: repeat(2, 1fr); } }
+  .evidence div { background: var(--panel-solid); padding: 9px 11px; font-size: 12.5px; color: #d6d9e6; }
+  .evidence small { display: block; font-family: var(--pixel); font-size: 10px; color: var(--faint); letter-spacing: .06em; margin-bottom: 3px; }
+  .evidence small::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 6px; background: var(--green); vertical-align: 0; }
+  .evidence div.warn small::before { background: #f6c177; }
+  .byline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 12px 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .byline span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .byline canvas { width: 24px; height: 18px; }
+  .walk-lane { position: relative; height: 64px; margin: 70px auto 0; max-width: 760px; border-bottom: 2px dashed rgba(165, 163, 255, 0.18); overflow: hidden; }
+  .walk-lane canvas { position: absolute; bottom: 0; left: 0; width: 100%; height: 64px; image-rendering: pixelated; }
   section.final { text-align: center; padding-top: 170px; padding-bottom: 140px; }
   .final h2 { margin: 18px auto 0; }
   .final .ctas { opacity: 1; animation: none; }
@@ -292,10 +321,10 @@
   <div class="wrap">
     <a class="brand" href="./"><img src="icon.png" alt="">BRANCH HQ</a>
     <div class="links">
-      <a href="#team">How it works</a>
-      <a href="#lifecycle">After handover</a>
-      <a href="#projects">Existing code</a>
-      <a href="#proof">Proof</a>
+      <a href="#office">The office</a>
+      <a href="#projects">Your codebase</a>
+      <a href="#provenance">Provenance</a>
+      <a href="#measured">Numbers</a>
       <a href="#install">Install</a>
       <a class="pill dl" href="#install">Download</a>
     </div>
@@ -323,10 +352,10 @@
         <div class="demo-left">
           <div class="prompt"><span class="caret-mark">›</span><span><span id="typed"></span><span class="cursor"></span></span></div>
           <div class="agents" id="agents">
-            <div class="agent" data-i="0"><div class="av" style="background:#8fb4ff">M</div><div><div class="who">Mitchell</div><div class="what">Plans the work, hands each part out</div></div><div class="state">waiting</div></div>
-            <div class="agent" data-i="1"><div class="av" style="background:#f6c177">J</div><div><div class="who">Jamie</div><div class="what">Builds the website</div></div><div class="state">waiting</div></div>
-            <div class="agent" data-i="2"><div class="av" style="background:#86e3b0">D</div><div><div class="who">Dwayne</div><div class="what">Builds the server and database</div></div><div class="state">waiting</div></div>
-            <div class="agent" data-i="3"><div class="av" style="background:#f4a3c0">P</div><div><div class="who">Penny</div><div class="what">Reviews every line</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="0"><div class="av px"><canvas class="pxface" data-name="Mitchell" width="8" height="6"></canvas></div><div><div class="who">Mitchell</div><div class="what">Plans the work, hands each part out</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="1"><div class="av px"><canvas class="pxface" data-name="Jamie" width="8" height="6"></canvas></div><div><div class="who">Jamie</div><div class="what">Builds the website</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="2"><div class="av px"><canvas class="pxface" data-name="Dwayne" width="8" height="6"></canvas></div><div><div class="who">Dwayne</div><div class="what">Builds the server and database</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="3"><div class="av px"><canvas class="pxface" data-name="Penny" width="8" height="6"></canvas></div><div><div class="who">Penny</div><div class="what">Reviews every line</div></div><div class="state">waiting</div></div>
           </div>
         </div>
         <div class="demo-right">
@@ -343,10 +372,105 @@
     <div class="stats reveal">
       <div class="stat"><div class="n">6</div><p>AI specialists, each with one job</p></div>
       <div class="stat"><div class="n">4</div><p>checks on every build before you see it</p></div>
-      <div class="stat"><div class="n">15<sup>/23</sup></div><p>builds verified end to end in our last three measured batches</p></div>
+      <div class="stat"><div class="n">27<sup>/32</sup></div><p>builds working end to end, on requests it had never seen</p></div>
       <div class="stat"><div class="n">0</div><p>bytes of your code leave the building on a local model</p></div>
     </div>
   </header>
+
+  <!-- ============ OFFICE ============ -->
+  <section id="office" class="wrap">
+    <div class="kicker reveal">The office</div>
+    <h2 class="reveal d1">Watch the work <em>happen.</em></h2>
+    <p class="intro reveal d2">Every request goes to a team in a little pixel office on your screen. The lead calls a meeting, the builders' screens light up as they write, the reviewer checks the result, and the file passes from desk to desk. Hover anyone and they wave.</p>
+    <figure class="office-show reveal">
+      <span class="tag">LIVE IN THE APP</span>
+      <div class="frame"><img src="office-loop.webp" width="962" height="634" alt="The Branch HQ office from above: the engineering team meets in the conference room, goes back to their desks, and their screens light up as they build; a department hands its work from lead to writer to reviewer" loading="lazy"></div>
+    </figure>
+    <div class="legend reveal">
+      <span><i style="background:#a5a3ff"></i>A purple screen: someone is working</span>
+      <span><i style="background:#34d399"></i>A green tick: done</span>
+      <span><i style="background:#e4e5f2"></i>A sheet of paper: the work being handed on</span>
+      <span><i style="background:#2b2f45;outline:1px solid #5d6377"></i>Six teams, twenty-five people, one floor</span>
+    </div>
+  </section>
+
+  <!-- ============ EXISTING CODE ============ -->
+  <section id="projects" class="wrap">
+    <div class="kicker reveal">Your codebase</div>
+    <h2 class="reveal d1">Point it at your repo. <em>Review</em> the pull request.</h2>
+    <p class="intro reveal d2">Most companies already have the code. Branch HQ works on it the way a careful new engineer would: reads first, changes only what was asked, runs your tests, gets a second opinion, and sends a pull request your team reviews like any other.</p>
+    <div class="split">
+      <ul class="points reveal">
+        <li><div class="dot">?</div><div><b>Ask first, or change</b><span>Ask how something works and get a plain answer from the code; nothing changes. Ask for a change, or say what is broken, when you want something done.</span></div></li>
+        <li><div class="dot">1</div><div><b>Every changed line, before anything moves</b><span>Your folder is untouched until you approve, and files with your own unsaved work are never touched.</span></div></li>
+        <li><div class="dot">2</div><div><b>Four checks, in the open</b><span>Static checks, your own tests in a separate copy, an independent review that judges whether it changed the right thing, and an audit record timestamped by an outside authority.</span></div></li>
+        <li><div class="dot">3</div><div><b>See it running, before and after</b><span>One click starts your project with the change applied, next to how it is now.</span></div></li>
+        <li><div class="dot">4</div><div><b>A pull request with the proof in it</b><span>On GitHub, GitHub Enterprise or GitLab. The description lists what checked it, the commit carries the same facts, and your branch protection, reviewers and CI decide when it merges.</span></div></li>
+        <li><div class="dot">5</div><div><b>Built for big repositories</b><span>It finds its way around thousands of files and reads large ones in the parts that matter. Tested on Outline, a real 2,822-file product: four of five requested changes correct, the fifth correct with extras a reviewer would trim.</span></div></li>
+        <li><div class="dot">6</div><div><b>Your team's rules, kept in the repo</b><span>Commit <code>.branchhq/policy.json</code> and every change and undo goes through review. A named approver list decides who may approve at all. Undo is one click.</span></div></li>
+      </ul>
+      <div class="mock reveal d2">
+        <div class="mock-head">
+          <h4>Make the maximum page size configurable</h4>
+          <div class="evidence">
+            <div><small>STATIC CHECKS</small>passed</div>
+            <div class="warn"><small>YOUR TESTS</small>could not run here</div>
+            <div><small>REVIEW</small>does what was asked</div>
+            <div><small>AUDIT</small>timestamped</div>
+          </div>
+        </div>
+        <div class="diff">
+          <div class="h">@@ server/routes/api/middlewares/pagination.ts @@</div>
+          <div>+import env from "@server/env";</div>
+          <div>     const opts = {</div>
+          <div class="r">-      maxLimit: Pagination.maxLimit,</div>
+          <div class="a">+      maxLimit: env.PAGINATION_MAX_LIMIT,</div>
+          <div class="h">@@ server/env.ts @@</div>
+          <div class="a">+  public PAGINATION_MAX_LIMIT =</div>
+          <div class="a">+    this.toOptionalNumber(environment.PAGINATION_MAX_LIMIT) ?? 100;</div>
+        </div>
+        <div class="byline">
+          <span><canvas class="pxface" data-name="Dwayne" width="8" height="6"></canvas>written by Dwayne</span>
+          <span><canvas class="pxface" data-name="Penny" width="8" height="6"></canvas>reviewed by Penny</span>
+          <span style="margin-left:auto">real change, real record</span>
+        </div>
+        <div class="trailer"><b>Branch-HQ-Model:</b> gemini:gemini-3.8-flash
+<b>Branch-HQ-Gate1:</b> passed (nothing new introduced)
+<b>Branch-HQ-Tests:</b> could not run (yarn test)
+<b>Branch-HQ-Review:</b> matches
+<b>Branch-HQ-Timestamp:</b> 2026-10-11T16:19:33Z by timestamp.digicert.com</div>
+        <p class="foot" style="padding:0 20px 16px;margin:0">A real change Branch HQ made to Outline, with the record it kept. Outline's tests need its database, so they could not run on our machine, and the record says so instead of pretending.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROVENANCE ============ -->
+  <section id="provenance" class="wrap">
+    <div class="kicker reveal">The question vendor reviews now ask</div>
+    <h2 class="reveal d1">Which of your code did AI write? <em>Answer with evidence.</em></h2>
+    <p class="intro reveal d2">One click makes the AI provenance report for a whole repository. It reads what travels with the code itself, so it survives squash merges and needs nothing from the computer that made the changes.</p>
+    <div class="split">
+      <ul class="points reveal">
+        <li><div class="dot">1</div><div><b>How much of the code, as it is now</b><span>Every line is traced with git blame. A line a person rewrote later is theirs; a change that was undone counts for nothing.</span></div></li>
+        <li><div class="dot">2</div><div><b>Every AI change, and what checked it</b><span>The model that wrote it, the security scan, the tests, the independent review and the named approver, change by change.</span></div></li>
+        <li><div class="dot">3</div><div><b>Records that could not have been written afterwards</b><span>Each change's audit record comes with a Merkle proof to a log head signed by an outside RFC 3161 timestamp authority.</span></div></li>
+        <li><div class="dot">4</div><div><b>Checked without us</b><span><code>node verify-provenance.mjs provenance.json your-repo</code> recomputes every record, proof and line count, and checks the authority's signature with openssl. No Branch HQ, no account, no packages.</span></div></li>
+      </ul>
+      <div class="mock reveal d2">
+        <div class="mock-head">
+          <h4>AI provenance: payments-service</h4>
+          <div class="chips"><span class="chip">31.4% of the code now AI-written</span><span class="chip">42 AI changes, 3 undone</span><span class="chip">41 / 42 tests passing</span><span class="chip n">39 proven by an outside timestamp</span></div>
+        </div>
+        <div class="trailer"><b>$ node verify-provenance.mjs provenance.json ./payments-service</b>
+ok  9f2c41e0b7 proven, witnessed 2026-10-09
+    by timestamp.digicert.com (signature verified)
+ok  line counts match: 6,212 of 19,786 AI-written
+
+Every check passed</div>
+        <p class="intro" style="margin:10px 20px 16px;font-size:13px">Example output.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ TEAM ============ -->
   <section id="team" class="wrap">
@@ -354,17 +478,13 @@
     <h2 class="reveal d1">Six specialists. <em>One</em> conversation.</h2>
     <p class="intro reveal d2">You talk to Mitchell. He works out what's needed and hands each part to the specialist who owns it, so the website, the server and the paperwork are each built by someone doing only that.</p>
     <div class="team">
-      <div class="card reveal"><div class="av" style="background:#8fb4ff">M</div><div class="role">Lead</div><h3>Mitchell</h3><p>Reads the request, asks for anything important that's missing, and routes the work.</p></div>
-      <div class="card reveal d1"><div class="av" style="background:#f6c177">J</div><div class="role">Frontend</div><h3>Jamie</h3><p>The website people actually use: pages, forms, layout and the small moments of motion.</p></div>
-      <div class="card reveal d2"><div class="av" style="background:#86e3b0">D</div><div class="role">Backend</div><h3>Dwayne</h3><p>The server, the database and the rules: logins, bookings, and nothing saved that shouldn't be.</p></div>
-      <div class="card reveal"><div class="av" style="background:#f4a3c0">P</div><div class="role">Reviewer</div><h3>Penny</h3><p>Reads every change like a senior engineer would and records a verdict. Never the model that wrote it.</p></div>
-      <div class="card reveal d1"><div class="av" style="background:#c7a6ff">R</div><div class="role">Documents</div><h3>Riley</h3><p>Proposals, reports and spreadsheets as real PDF, Word, Excel and PowerPoint files.</p></div>
-      <div class="card reveal d2"><div class="av" style="background:#7fd8e6">D</div><div class="role">Operations</div><h3>Dana</h3><p>Answers from the real record: what was built, what passed, what's still open.</p></div>
+      <div class="card reveal"><div class="av px"><canvas class="pxface" data-name="Mitchell" width="8" height="6"></canvas></div><div class="role">Lead</div><h3>Mitchell</h3><p>Reads the request, asks for anything important that's missing, and routes the work.</p></div>
+      <div class="card reveal d1"><div class="av px"><canvas class="pxface" data-name="Jamie" width="8" height="6"></canvas></div><div class="role">Frontend</div><h3>Jamie</h3><p>The website people actually use: pages, forms, layout and the small moments of motion.</p></div>
+      <div class="card reveal d2"><div class="av px"><canvas class="pxface" data-name="Dwayne" width="8" height="6"></canvas></div><div class="role">Backend</div><h3>Dwayne</h3><p>The server, the database and the rules: logins, bookings, and nothing saved that shouldn't be.</p></div>
+      <div class="card reveal"><div class="av px"><canvas class="pxface" data-name="Penny" width="8" height="6"></canvas></div><div class="role">Reviewer</div><h3>Penny</h3><p>Reads every change like a senior engineer would and records a verdict. Never the model that wrote it.</p></div>
+      <div class="card reveal d1"><div class="av px"><canvas class="pxface" data-name="Riley" width="8" height="6"></canvas></div><div class="role">Documents</div><h3>Riley</h3><p>Proposals, reports and spreadsheets as real PDF, Word, Excel and PowerPoint files.</p></div>
+      <div class="card reveal d2"><div class="av px"><canvas class="pxface" data-name="Dana" width="8" height="6"></canvas></div><div class="role">Operations</div><h3>Dana</h3><p>Answers from the real record: what was built, what passed, what's still open.</p></div>
     </div>
-    <figure class="office-loop reveal">
-      <img src="office-loop.webp" width="642" height="434" alt="The Branch HQ office from above: the engineering team meets in the conference room to plan, goes back to their desks, and their screens light up as they build" loading="lazy">
-      <figcaption>The office, as the app shows it while it works: the team meets to plan, the builders' screens light up, the reviewer checks the result, and a department hands its work from lead to writer to reviewer. A replay, recorded from the app.</figcaption>
-    </figure>
     <div class="callout reveal"><div class="q">“</div><p><strong>One sentence is enough.</strong> It builds straight away from what you said. Anything only you can know is left as a visible placeholder to fill in later, instead of a guess.</p></div>
   </section>
 
@@ -421,69 +541,6 @@
     </div>
   </section>
 
-  <!-- ============ EXISTING CODE ============ -->
-  <section id="projects" class="wrap">
-    <div class="kicker reveal">Change code you already have</div>
-    <h2 class="reveal d1">Point it at your repo. <em>Review</em> the pull request.</h2>
-    <div class="split">
-      <ul class="points reveal">
-        <li><div class="dot">?</div><div><b>Ask first, or change</b><span>Ask questions about the code and get plain answers — nothing changes. Switch to Change when you want something done.</span></div></li>
-        <li><div class="dot">1</div><div><b>Every changed line, before anything moves</b><span>Your folder stays untouched until you approve. Files with your own unsaved work are never touched.</span></div></li>
-        <li><div class="dot">2</div><div><b>Your own tests, on the change</b><span>Run in a separate copy, per package in a monorepo. A failure is only blamed on the change if the tests passed without it.</span></div></li>
-        <li><div class="dot">3</div><div><b>See it running, before and after</b><span>One click starts your project with the change applied, next to how it is now.</span></div></li>
-        <li><div class="dot">4</div><div><b>A pull request with the proof in it</b><span>Approved changes go to GitHub or GitHub Enterprise as a pull request whose description lists what checked it. Your branch protection, reviewers and CI decide when it merges. Your own checkout is never touched.</span></div></li>
-        <li><div class="dot">5</div><div><b>Your team's rule, kept in the repo</b><span>Commit <code>.branchhq/policy.json</code> and every change and undo must go through review. A named approver list decides who may approve at all. Undo is one click, as a pull request too.</span></div></li>
-      </ul>
-      <div class="mock reveal d2">
-        <div class="mock-head">
-          <h4>Add Saturday opening hours, 8am to 1pm</h4>
-          <div class="chips"><span class="chip">Gate 1: passed</span><span class="chip">Tests: passed (npm test)</span><span class="chip">Review: does what was asked</span><span class="chip n">local:qwen2.5-coder</span></div>
-        </div>
-        <div class="diff">
-          <div class="h">@@ index.html @@</div>
-          <div>        &lt;h2&gt;Opening hours&lt;/h2&gt;</div>
-          <div class="r">-       &lt;p&gt;Monday to Friday, 7am to 3pm&lt;/p&gt;</div>
-          <div class="a">+       &lt;p&gt;Monday to Friday, 7am to 3pm&lt;br&gt;</div>
-          <div class="a">+       Saturday, 8am to 1pm&lt;/p&gt;</div>
-          <div>      &lt;/section&gt;</div>
-        </div>
-        <div class="ba"><div><small>Before</small>Mon–Fri, 7am–3pm</div><div><small>After</small>Mon–Fri, 7am–3pm<br><span class="new">Saturday, 8am–1pm</span></div></div>
-        <div class="trailer"><b>Branch-HQ-Gate1:</b> passed
-<b>Branch-HQ-Tests:</b> passed (npm test)
-<b>Branch-HQ-Review:</b> matches
-<b>Branch-HQ-Timestamp:</b> 2026-09-23T10:49:42Z by timestamp.digicert.com</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PROVENANCE ============ -->
-  <section id="provenance" class="wrap">
-    <div class="kicker reveal">The question vendor reviews now ask</div>
-    <h2 class="reveal d1">Which of your code did AI write? <em>Answer with evidence.</em></h2>
-    <p class="intro reveal d2">One click makes the AI provenance report for a whole repository. It reads what travels with the code itself, so it survives squash merges and needs nothing from the computer that made the changes.</p>
-    <div class="split">
-      <ul class="points reveal">
-        <li><div class="dot">1</div><div><b>How much of the code, as it is now</b><span>Every line is traced with git blame. A line a person rewrote later is theirs; a change that was undone counts for nothing.</span></div></li>
-        <li><div class="dot">2</div><div><b>Every AI change, and what checked it</b><span>The model that wrote it, the security scan, the tests, the independent review and the named approver, change by change.</span></div></li>
-        <li><div class="dot">3</div><div><b>Records that could not have been written afterwards</b><span>Each change's audit record comes with a Merkle proof to a log head signed by an outside RFC 3161 timestamp authority.</span></div></li>
-        <li><div class="dot">4</div><div><b>Checked without us</b><span><code>node verify-provenance.mjs provenance.json your-repo</code> recomputes every record, proof and line count, and checks the authority's signature with openssl. No Branch HQ, no account, no packages.</span></div></li>
-      </ul>
-      <div class="mock reveal d2">
-        <div class="mock-head">
-          <h4>AI provenance: payments-service</h4>
-          <div class="chips"><span class="chip">31.4% of the code now AI-written</span><span class="chip">42 AI changes, 3 undone</span><span class="chip">41 / 42 tests passing</span><span class="chip n">39 proven by an outside timestamp</span></div>
-        </div>
-        <div class="trailer"><b>$ node verify-provenance.mjs provenance.json ./payments-service</b>
-ok  9f2c41e0b7 proven, witnessed 2026-10-09
-    by timestamp.digicert.com (signature verified)
-ok  line counts match: 6,212 of 19,786 AI-written
-
-Every check passed</div>
-        <p class="intro" style="margin:10px 20px 16px;font-size:13px">Example output.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- ============ LEDGER ============ -->
   <section class="wrap">
     <div class="kicker reveal">A record nobody can quietly rewrite</div>
@@ -532,22 +589,37 @@ Every check passed</div>
       <div class="card model reveal"><h3>Gemini</h3><p>The free tier is enough to start.</p><span class="tag cloud">cloud</span></div>
       <div class="card model reveal d1"><h3>Claude</h3><p>Strongest on large, multi-file work.</p><span class="tag cloud">cloud</span></div>
       <div class="card model reveal d2"><h3>OpenAI</h3><p>Familiar to most teams.</p><span class="tag cloud">cloud</span></div>
+      <div class="card model reveal"><h3>Azure OpenAI</h3><p>Your company's own Azure tenant, under your agreement.</p><span class="tag cloud">your tenant</span></div>
+      <div class="card model reveal d1"><h3>AWS Bedrock</h3><p>Claude, Llama and more, in your own AWS account.</p><span class="tag cloud">your account</span></div>
       <div class="card model featured reveal d3"><h3>Your own server</h3><p>Ollama and any OpenAI-compatible server. Found automatically.</p><span class="tag local">local · private</span></div>
     </div>
   </section>
 
   <!-- ============ MEASURED ============ -->
-  <section class="wrap">
+  <section id="measured" class="wrap">
     <div class="kicker reveal">Measured, not claimed</div>
     <h2 class="reveal d1">We test it the <em>hard</em> way.</h2>
     <div class="chart" id="chart">
-      <div class="reveal"><div class="big">15<span>/23</span></div><p class="intro" style="margin-top:14px">builds verified end to end across our last three batches. Same prompt, ten times each, nothing fixed in between, and a pass only counts if a real booking was saved and read back.</p></div>
+      <div class="reveal"><div class="big">84%</div><p class="intro" style="margin-top:20px">27 of 32 builds working end to end, on eight requests it had never seen before, four builds each. A build only counts when the app is actually started and its main action saves real data that is read back.</p></div>
       <div class="bars reveal d2">
-        <div class="bar"><div class="lbl">Batch 20<b>7 / 9</b></div><div class="track"><div class="fill" style="--v:.778"></div></div></div>
-        <div class="bar"><div class="lbl">Batch 21<b>0 / 4</b></div><div class="track"><div class="fill" style="--v:0"></div></div></div>
-        <div class="bar"><div class="lbl">Batch 23 · latest<b>8 / 10</b></div><div class="track"><div class="fill" style="--v:.8"></div></div></div>
-        <p class="foot">One free Gemini model for every specialist. Runs the model provider cut off mid-build (a timeout or a rate limit) are excluded: one in batch 20, six in batch 21, none in batch 23. Batch 21's four failures all traced to two bugs in our own project template, fixed before batch 23. Batch 22 scored 2 / 10 and is not counted: a quota error silently moved every call to an older backup model, so it did not measure the setup being tested -- the audit trail is how we found out. The same test runs again before every claim we make.</p>
+        <div class="bar"><div class="lbl">Tuition centre<b>4 / 4</b></div><div class="track"><div class="fill" style="--v:1"></div></div></div>
+        <div class="bar"><div class="lbl">Interior design quote<b>4 / 4</b></div><div class="track"><div class="fill" style="--v:1"></div></div></div>
+        <div class="bar"><div class="lbl">Yoga studio with full classes<b>4 / 4</b></div><div class="track"><div class="fill" style="--v:1"></div></div></div>
+        <div class="bar"><div class="lbl">Musician's website<b>4 / 4</b></div><div class="track"><div class="fill" style="--v:1"></div></div></div>
+        <div class="bar"><div class="lbl">Bakery pre-orders against daily stock<b>3 / 4</b></div><div class="track"><div class="fill" style="--v:.75"></div></div></div>
+        <div class="bar"><div class="lbl">Car service bookings<b>3 / 4</b></div><div class="track"><div class="fill" style="--v:.75"></div></div></div>
+        <div class="bar"><div class="lbl">Catering enquiries<b>3 / 4</b></div><div class="track"><div class="fill" style="--v:.75"></div></div></div>
+        <div class="bar"><div class="lbl">Library loans<b>2 / 4</b></div><div class="track"><div class="fill" style="--v:.5"></div></div></div>
+        <p class="foot">Measured on 6 October 2026 on a free Gemini model, with nothing fixed against these requests beforehand. Every one of the five failures was traced: four were mistakes in our own checker and one was a product bug, and each has been fixed since.</p>
       </div>
+    </div>
+    <div class="proofs">
+      <div class="proof reveal"><div class="v">10<small>/10</small></div><p>builds working end to end in one batch, every one started and its main action saved and read back.</p><span class="when">late September 2026</span></div>
+      <div class="proof reveal d1"><div class="v">26<small>/28</small></div><p>across three batches running the in-build boot check.</p><span class="when">late September 2026</span></div>
+      <div class="proof reveal d2"><div class="v">4<small>/5</small></div><p>changes correct on Outline, a real 2,822-file product; the fifth correct with extras a reviewer would trim.</p><span class="when">11 October 2026</span></div>
+      <div class="proof reveal"><div class="v">29<small>s</small></div><p>for the CI it writes into every project to go green on real GitHub Actions.</p><span class="when">11 October 2026</span></div>
+      <div class="proof reveal d1"><div class="v">✓</div><p>pull requests opened, listed and withdrawn on real GitHub; the auditor's checker verified a real DigiCert timestamp.</p><span class="when">11 October 2026</span></div>
+      <div class="proof reveal d2"><div class="v">1,396</div><p>automated tests behind every release, many of them real repositories, real servers and real git.</p><span class="when">every change</span></div>
     </div>
   </section>
 
@@ -594,6 +666,7 @@ Every check passed</div>
       <a class="btn primary" data-os="mac" href="https://github.com/shrestha-droid/branchhq/releases/latest/download/branch-hq-mac-arm64.dmg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>Download for Mac</a>
       <a class="btn ghost" data-os="windows" href="https://github.com/shrestha-droid/branchhq/releases/latest/download/branch-hq-windows-setup.exe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>Download for Windows</a>
     </div>
+    <div class="walk-lane" aria-hidden="true"><canvas id="walker"></canvas></div>
   </section>
 </main>
 
@@ -678,6 +751,59 @@ Every check passed</div>
     agents.forEach(a => setState(a, 'done', 'done')); checks.forEach(c => c.classList.add('ok')); verdict.classList.add('show')
   } else {
     setTimeout(() => run(0), 2000)
+  }
+
+  // --- Pixel people, from the same grid and colour rules as the app's office (OfficeScene.tsx).
+  const PX = {
+    front: ['..HHHH..', '.HHHHHH.', '.HKKKKH.', '.KEKKEK.', '..KKKK..', '.SSCCSS.', 'SSSSSSSS', 'SSSSSSSS', 'KSSSSSSK'],
+    longFront: { 2: 'HHKKKKHH', 3: 'HKEKKEKH', 4: 'H.KKKK.H' },
+    legs: [['..P..P..', '..P..P..', '..B..B..'], ['...PP...', '..P..P..', '.B....B.']],
+    skins: ['#f1c9a5', '#e0ac69', '#c68642', '#8d5524', '#ffdbac'],
+    hairs: ['#2b2119', '#4a3323', '#7a5a3a', '#18181c', '#8a4a2e', '#6e6e78', '#b08850'],
+    shirts: ['#3d4a66', '#3e5a4c', '#52476a', '#5e4848', '#405c66', '#5c5640', '#3e3e58', '#4a5a44', '#5a4a5e'],
+    team: { Mitchell: '#4b4aa8', Jamie: '#3f5f80', Dwayne: '#3d6650', Penny: '#7a6436', Riley: '#5f4a7a' },
+  }
+  const pxHash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+  const pxLook = name => { const h = pxHash(name); return { hair: PX.hairs[h % PX.hairs.length], skin: PX.skins[(h >>> 3) % PX.skins.length], shirt: PX.team[name] || PX.shirts[(h >>> 5) % PX.shirts.length], long: (h >>> 7) % 3 === 0 } }
+  function pxRows(look, legs) {
+    const rows = PX.front.slice()
+    if (look.long) for (const [r, line] of Object.entries(PX.longFront)) rows[r] = line
+    return legs === undefined ? rows : [...rows.slice(0, 8), ...PX.legs[legs % 2]]
+  }
+  function pxPaint(g, rows, look, ox = 0, oy = 0) {
+    rows.forEach((line, y) => [...line].forEach((t, x) => {
+      if (t === '.') return
+      g.fillStyle = t === 'H' ? look.hair : t === 'K' ? look.skin : t === 'E' ? '#1c1c22' : t === 'C' ? '#d8d8e4' : t === 'P' ? '#23263a' : t === 'B' ? '#15161f' : look.shirt
+      g.fillRect(ox + x, oy + y, 1, 1)
+    }))
+  }
+  document.querySelectorAll('canvas.pxface').forEach(c => pxPaint(c.getContext('2d'), pxRows(pxLook(c.dataset.name)).slice(0, 6), pxLook(c.dataset.name)))
+
+  // --- The walker: someone carries a sheet across the lane under the download buttons, now and then.
+  const lane = document.getElementById('walker')
+  if (lane) {
+    const S = 4, g = lane.getContext('2d')
+    const crew = ['Mitchell', 'Jamie', 'Dwayne', 'Penny', 'Riley']
+    let who = 0, x = -20, step = 0, pause = 0
+    const size = () => { lane.width = Math.ceil(lane.clientWidth / S); lane.height = 16 }
+    size(); addEventListener('resize', size)
+    const draw = () => {
+      g.clearRect(0, 0, lane.width, lane.height)
+      const look = pxLook(crew[who])
+      pxPaint(g, pxRows(look, pause > 0 ? 0 : Math.floor(step / 6)), look, Math.round(x), 5)
+      g.fillStyle = '#e4e5f2'; g.fillRect(Math.round(x) + 7, 9, 3, 4); g.fillStyle = '#9a98d8'; g.fillRect(Math.round(x) + 7, 10, 3, 1)
+    }
+    if (reduce) { x = lane.width / 2; draw() } else {
+      const tick = () => {
+        const mid = lane.width / 2 - 4, before = x
+        if (pause > 0) pause--
+        else { x += 0.35; step++ }
+        if (before < mid && x >= mid) pause = 90 // a moment in the middle, facing you
+        if (x > lane.width + 12) { x = -14; who = (who + 1) % crew.length; step = 0 }
+        draw(); requestAnimationFrame(tick)
+      }
+      tick()
+    }
   }
 
   // --- The sky: drifting stars, nearer ones brighter and faster, following the pointer a little.
