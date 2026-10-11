@@ -120,6 +120,9 @@
   h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.4vw, 80px); line-height: 1; letter-spacing: -0.02em; margin: 18px 0 0; max-width: 900px; }
   h2 em { font-style: italic; color: var(--warm); }
   .intro { margin: 24px 0 0; max-width: 640px; font-size: 18px; color: var(--muted); }
+.office-loop { margin: 56px 0 8px; }
+  .office-loop img { display: block; width: 100%; max-width: 642px; height: auto; image-rendering: pixelated; border-radius: 10px; box-shadow: 0 30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07); }
+  .office-loop figcaption { margin-top: 14px; max-width: 642px; font-size: 13.5px; line-height: 1.6; color: #8b91a7; }
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1s cubic-bezier(.2,.7,.1,1), transform 1s cubic-bezier(.2,.7,.1,1); }
   .reveal.in { opacity: 1; transform: none; }
   .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; } .d3 { transition-delay: .24s; } .d4 { transition-delay: .32s; } .d5 { transition-delay: .4s; }
@@ -358,6 +361,10 @@
       <div class="card reveal d1"><div class="av" style="background:#c7a6ff">R</div><div class="role">Documents</div><h3>Riley</h3><p>Proposals, reports and spreadsheets as real PDF, Word, Excel and PowerPoint files.</p></div>
       <div class="card reveal d2"><div class="av" style="background:#7fd8e6">D</div><div class="role">Operations</div><h3>Dana</h3><p>Answers from the real record: what was built, what passed, what's still open.</p></div>
     </div>
+    <figure class="office-loop reveal">
+      <img src="office-loop.webp" width="642" height="434" alt="The Branch HQ office from above: the engineering team meets in the conference room to plan, goes back to their desks, and their screens light up as they build" loading="lazy">
+      <figcaption>The office, as the app shows it while it works: the team meets to plan, the builders' screens light up, the reviewer checks the result, and a department hands its work from lead to writer to reviewer. A replay, recorded from the app.</figcaption>
+    </figure>
     <div class="callout reveal"><div class="q">“</div><p><strong>One sentence is enough.</strong> It builds straight away from what you said. Anything only you can know is left as a visible placeholder to fill in later, instead of a guess.</p></div>
   </section>
 
