@@ -296,6 +296,11 @@
   .byline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 12px 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
   .byline span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
   .byline canvas { width: 24px; height: 18px; }
+  .crew { position: relative; margin: 52px 0 0; }
+  .crew canvas { display: block; image-rendering: pixelated; cursor: pointer; border-bottom: 2px dashed rgba(165, 163, 255, 0.18); }
+  .crew-hint { margin: 10px 0 0; font-family: var(--pixel); font-size: 11px; color: var(--faint); letter-spacing: .06em; }
+  .crew-tip { position: absolute; transform: translate(-50%, -100%); pointer-events: none; white-space: nowrap; padding: 6px 10px; background: #12152a; border: 1px solid var(--line-strong); box-shadow: 3px 3px 0 rgba(94, 92, 230, 0.35); font-size: 12.5px; color: var(--ink); }
+  .crew-tip b { font-family: var(--pixel); font-weight: 400; font-size: 11px; color: var(--warm); margin-right: 8px; }
   .walk-lane { position: relative; height: 64px; margin: 70px auto 0; max-width: 760px; border-bottom: 2px dashed rgba(165, 163, 255, 0.18); overflow: hidden; }
   .walk-lane canvas { position: absolute; bottom: 0; left: 0; width: 100%; height: 64px; image-rendering: pixelated; }
   section.final { text-align: center; padding-top: 170px; padding-bottom: 140px; }
@@ -477,6 +482,11 @@ Every check passed</div>
     <div class="kicker reveal">A team, not a text box</div>
     <h2 class="reveal d1">Six specialists. <em>One</em> conversation.</h2>
     <p class="intro reveal d2">You talk to Mitchell. He works out what's needed and hands each part to the specialist who owns it, so the website, the server and the paperwork are each built by someone doing only that.</p>
+    <div class="crew reveal" id="crewBox">
+      <canvas id="crew" aria-label="The team as pixel people: Mitchell at a whiteboard, Jamie typing, Dwayne carrying a server, Penny holding up a tick, Riley with a coffee, Dana waving"></canvas>
+      <div class="crew-tip" id="crewTip" hidden></div>
+      <p class="crew-hint">Hover anyone: they wave back.</p>
+    </div>
     <div class="team">
       <div class="card reveal"><div class="av px"><canvas class="pxface" data-name="Mitchell" width="8" height="6"></canvas></div><div class="role">Lead</div><h3>Mitchell</h3><p>Reads the request, asks for anything important that's missing, and routes the work.</p></div>
       <div class="card reveal d1"><div class="av px"><canvas class="pxface" data-name="Jamie" width="8" height="6"></canvas></div><div class="role">Frontend</div><h3>Jamie</h3><p>The website people actually use: pages, forms, layout and the small moments of motion.</p></div>
@@ -778,6 +788,91 @@ Every check passed</div>
     }))
   }
   document.querySelectorAll('canvas.pxface').forEach(c => pxPaint(c.getContext('2d'), pxRows(pxLook(c.dataset.name)).slice(0, 6), pxLook(c.dataset.name)))
+
+  // --- The crew: each specialist doing their job, in pixels. Hover someone and they wave back.
+  const crewCanvas = document.getElementById('crew')
+  if (crewCanvas) {
+    const W = 200, H = 36, BASE = 33
+    const c = crewCanvas, g = c.getContext('2d'), tip = document.getElementById('crewTip')
+    c.width = W; c.height = H
+    let S = 3
+    const fit = () => { const room = c.parentElement.clientWidth; S = Math.min(5, Math.floor(room / W)); if (S < 2) S = room / W; c.style.width = W * S + 'px'; c.style.height = H * S + 'px' } // whole pixels where there is room; a phone gets the width it has
+    fit(); addEventListener('resize', fit)
+    const crew = [
+      { name: 'Mitchell', role: 'Lead: plans the work and hands it out', x: 22 },
+      { name: 'Jamie', role: 'Builds the website', x: 54 },
+      { name: 'Dwayne', role: 'Builds the server and the database', x: 86 },
+      { name: 'Penny', role: 'Reviews every change', x: 120 },
+      { name: 'Riley', role: 'Writes the documents', x: 150 },
+      { name: 'Dana', role: 'Knows what was built and what passed', x: 180 },
+    ].map(m => ({ ...m, look: pxLook(m.name), wave: 0 }))
+    const px = (x, y, w, h, col) => { g.fillStyle = col; g.fillRect(x, y, w, h) }
+    const body = (m, x, y, opts = {}) => {
+      const rows = pxRows(m.look, opts.legs === undefined ? 0 : opts.legs)
+      if (opts.wave !== undefined) {
+        const hand = opts.wave % 2 === 0 ? [1, 2, 3] : [2, 3, 4]
+        for (const r of hand) rows[r] = rows[r].slice(0, 7) + 'K'
+        rows[8] = rows[8].slice(0, 7) + 'S'
+      }
+      pxPaint(g, rows, m.look, x, y)
+    }
+    let hovered = -1, t = 0
+    c.addEventListener('pointermove', e => {
+      const r = c.getBoundingClientRect(), nx = (e.clientX - r.left) / S
+      const i = crew.findIndex(m => Math.abs(nx - (m.x + 4 + (m.dx || 0))) < 9)
+      if (i !== hovered) { hovered = i; if (i >= 0) crew[i].wave = 90 }
+      if (i >= 0) { tip.hidden = false; tip.innerHTML = '<b>' + crew[i].name + '</b>' + crew[i].role; tip.style.left = (crew[i].x + 4 + (crew[i].dx || 0)) * S + 'px'; tip.style.top = (BASE - 18) * S - 8 + 'px' }
+      else tip.hidden = true
+    })
+    c.addEventListener('pointerleave', () => { hovered = -1; tip.hidden = true })
+    const draw = () => {
+      g.clearRect(0, 0, W, H)
+      const f = Math.floor(t / 10), top = BASE - 12
+      crew.forEach((m, i) => {
+        const waving = m.wave > 0 ? Math.floor(t / 6) : undefined
+        if (m.wave > 0) m.wave--
+        const x = m.x
+        if (i === 0) { // Mitchell at a whiteboard, pointing at the plan
+          px(x - 19, top - 2, 14, 10, '#7a7e96'); px(x - 18, top - 1, 12, 8, '#d9dbe8')
+          px(x - 16, top + 1, 7, 1, '#7d7bd6'); px(x - 16, top + 3, 5, 1, '#6a8f7c'); px(x - 16, top + 5, 8, 1, '#a9aec4')
+          px(x - 12, top + 8, 2, 4, '#7a7e96')
+          body(m, x, top, { wave: waving })
+          if (waving === undefined) { const reach = f % 4 < 2 ? 2 : 3; px(x - reach, top + 6, reach, 1, m.look.skin) }
+        } else if (i === 1) { // Jamie typing at a laptop
+          body(m, x, top, { wave: waving })
+          px(x - 3, top + 8, 14, 2, '#3a3f5c'); px(x - 3, top + 10, 1, 2, '#2b2f45'); px(x + 10, top + 10, 1, 2, '#2b2f45')
+          px(x + 1, top + 4, 6, 4, '#1d2133'); px(x + 1, top + 4, 6, 1, f % 2 ? '#a5a3ff' : '#8b88f0')
+          if (waving === undefined && t % 8 < 4) px(x + 1 + (f % 3) * 2, top + 7, 1, 1, m.look.skin)
+        } else if (i === 2) { // Dwayne carrying a server box back and forth
+          const span = 10, phase = (t % 240) / 240, off = Math.round((phase < .5 ? phase * 2 : 2 - phase * 2) * span) - span / 2
+          m.dx = waving === undefined ? off : (m.dx || 0)
+          const walking = waving === undefined && Math.abs(((t + 1) % 240) / 240 - .5) < .49
+          body(m, x + m.dx, top, { legs: walking ? Math.floor(t / 7) : 0, wave: waving })
+          if (waving === undefined) { px(x + m.dx + 1, top + 5, 6, 4, '#2b2f45'); px(x + m.dx + 1, top + 5, 6, 1, '#3a405e'); px(x + m.dx + 2, top + 7, 1, 1, f % 2 ? '#34d399' : '#1d6b4c'); px(x + m.dx + 4, top + 7, 1, 1, '#a5a3ff') }
+        } else if (i === 3) { // Penny holding up a tick
+          const up = waving === undefined && (t % 200) < 120 ? (Math.floor(t / 12) % 2) : 0
+          body(m, x, top, { wave: waving })
+          if (waving === undefined) {
+            px(x + 7, top - 3 - up, 1, 10, '#7a7e96')
+            px(x + 4, top - 10 - up, 9, 7, '#e4e5f2')
+            px(x + 6, top - 7 - up, 1, 1, '#16a34a'); px(x + 7, top - 6 - up, 1, 1, '#16a34a'); px(x + 8, top - 7 - up, 1, 1, '#16a34a'); px(x + 9, top - 8 - up, 1, 1, '#16a34a'); px(x + 10, top - 9 - up, 1, 1, '#16a34a')
+          }
+        } else if (i === 4) { // Riley with a coffee and a document
+          body(m, x, top, { wave: waving })
+          if (waving === undefined) {
+            const sip = (t % 260) > 200
+            if (sip) { px(x + 5, top + 4, 2, 2, '#e4e5f2'); px(x + 5, top + 4, 2, 1, '#6b4a35') } else { px(x + 7, top + 7, 2, 2, '#e4e5f2'); px(x + 7, top + 7, 2, 1, '#6b4a35'); if (f % 3 === 0) px(x + 8, top + 5, 1, 1, 'rgba(228,229,242,.5)') }
+            px(x - 2, top + 6, 3, 4, '#e4e5f2'); px(x - 2, top + 7, 3, 1, '#9a98d8')
+          }
+        } else { // Dana waves at you every so often
+          const w = waving !== undefined ? waving : (t % 300) < 70 ? Math.floor(t / 6) : undefined
+          body(m, x, top, { wave: w })
+        }
+      })
+    }
+    if (reduce) draw()
+    else { const loop = () => { t++; draw(); requestAnimationFrame(loop) }; loop() }
+  }
 
   // --- The walker: someone carries a sheet across the lane under the download buttons, now and then.
   const lane = document.getElementById('walker')
