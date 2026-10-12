@@ -361,6 +361,8 @@
             <div class="agent" data-i="1"><div class="av px"><canvas class="pxface" data-name="Jamie" width="8" height="6"></canvas></div><div><div class="who">Jamie</div><div class="what">Builds the website</div></div><div class="state">waiting</div></div>
             <div class="agent" data-i="2"><div class="av px"><canvas class="pxface" data-name="Dwayne" width="8" height="6"></canvas></div><div><div class="who">Dwayne</div><div class="what">Builds the server and database</div></div><div class="state">waiting</div></div>
             <div class="agent" data-i="3"><div class="av px"><canvas class="pxface" data-name="Penny" width="8" height="6"></canvas></div><div><div class="who">Penny</div><div class="what">Reviews every line</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="4"><div class="av px"><canvas class="pxface" data-name="Riley" width="8" height="6"></canvas></div><div><div class="who">Riley</div><div class="what">Writes the handover document</div></div><div class="state">waiting</div></div>
+            <div class="agent" data-i="5"><div class="av px"><canvas class="pxface" data-name="Dana" width="8" height="6"></canvas></div><div><div class="who">Dana</div><div class="what">Keeps the record of what was done</div></div><div class="state">waiting</div></div>
           </div>
         </div>
         <div class="demo-right">
@@ -742,7 +744,7 @@ Every check passed</div>
     typed.textContent = ''
     for (const ch of PROMPTS[i % PROMPTS.length]) { typed.textContent += ch; await wait(34) }
     await wait(500)
-    const work = [['planning', 900], ['building', 1500], ['building', 1500], ['reviewing', 1100]]
+    const work = [['planning', 900], ['building', 1500], ['building', 1500], ['reviewing', 1100], ['writing', 900], ['recording', 700]]
     for (let k = 0; k < agents.length; k++) {
       setState(agents[k], 'on', work[k][0] + '…')
       await wait(work[k][1])
@@ -771,7 +773,7 @@ Every check passed</div>
     skins: ['#f1c9a5', '#e0ac69', '#c68642', '#8d5524', '#ffdbac'],
     hairs: ['#2b2119', '#4a3323', '#7a5a3a', '#18181c', '#8a4a2e', '#6e6e78', '#b08850'],
     shirts: ['#3d4a66', '#3e5a4c', '#52476a', '#5e4848', '#405c66', '#5c5640', '#3e3e58', '#4a5a44', '#5a4a5e'],
-    team: { Mitchell: '#4b4aa8', Jamie: '#3f5f80', Dwayne: '#3d6650', Penny: '#7a6436', Riley: '#5f4a7a' },
+    team: { Mitchell: '#4b4aa8', Jamie: '#3f5f80', Dwayne: '#3d6650', Penny: '#7a6436', Riley: '#5f4a7a', Dana: '#3f6a6e' },
   }
   const pxHash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
   const pxLook = name => { const h = pxHash(name); return { hair: PX.hairs[h % PX.hairs.length], skin: PX.skins[(h >>> 3) % PX.skins.length], shirt: PX.team[name] || PX.shirts[(h >>> 5) % PX.shirts.length], long: (h >>> 7) % 3 === 0 } }
