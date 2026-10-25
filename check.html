@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source Code Security Review</title>
+<meta name="description" content="A source code security review before your customer's security review or VAPT audit: every problem at its exact file and line, explained plainly, with the fixes.">
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); }
+  body { margin: 0; background: radial-gradient(55% 45% at 20% -5%, rgba(70, 95, 200, 0.28), transparent 70%), #04050a; color: var(--text); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; line-height: 1.7; }
+  main { max-width: 760px; margin: 0 auto; padding: 72px 20px 96px; }
+  a { color: var(--accent-soft); }
+  h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(40px, 7vw, 64px); line-height: 1.02; margin: 18px 0 14px; }
+  .lead { font-size: 18px; color: var(--muted); margin: 0; }
+  .stat { margin: 40px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; }
+  .stat b { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 64px; line-height: 1; color: #ff9b9b; }
+  .stat p { margin: 0; color: var(--muted); }
+  .stat small { display: block; margin-top: 6px; color: var(--faint); font-size: 12.5px; line-height: 1.5; }
+  h2 { font-size: 15px; font-weight: 600; margin: 48px 0 0; letter-spacing: .01em; }
+  ul.checks { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  ul.checks li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; color: var(--muted); }
+  ul.checks li strong { color: var(--text); font-weight: 600; }
+  ol.steps { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: n; }
+  ol.steps li { counter-increment: n; display: grid; grid-template-columns: 30px 1fr; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; color: var(--muted); }
+  ol.steps li::before { content: counter(n); font-family: ui-monospace, Menlo, monospace; color: var(--accent-soft); font-size: 13px; padding-top: 2px; }
+  .cta { margin: 48px 0 0; background: linear-gradient(0deg, rgba(94, 92, 230, 0.16), rgba(94, 92, 230, 0.16)), var(--card); border: 1px solid rgba(165, 163, 255, 0.35); border-radius: 18px; padding: 26px 24px; }
+  .cta h2 { margin: 0; font-size: 20px; }
+  .cta p { margin: 8px 0 0; color: var(--muted); }
+  .btn { display: inline-block; margin-top: 16px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; border-radius: 10px; padding: 11px 18px; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); margin-left: 8px; }
+  .note { margin-top: 28px; color: var(--faint); font-size: 13px; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #d9dcff; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .stat { grid-template-columns: 1fr; } .btn.ghost { margin-left: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <a href="./">&larr; Branch HQ</a>
+  <h1>Source code security review, before your audit.</h1>
+  <p class="lead">Facing a customer's security review or a VAPT audit? We review your code first and show each problem at its exact file and line, explained in plain words with the fix, so you can clear it before the auditor finds it. It is built especially for code written with AI (Cursor, Lovable, Bolt, v0), which often ships with the database open, admin keys in the website, or secrets every visitor can read.</p>
+
+  <div class="stat">
+    <b>34 of 94</b>
+    <p>public apps built with Lovable and Supabase that we checked had at least one serious problem: an exposed admin key, a database anyone could read, a function that runs any command on the database, or secret keys sent to the browser.
+      <small>Public GitHub projects made with Lovable, checked in October 2026. Each serious finding was read by hand before it was counted.</small></p>
+  </div>
+
+  <h2>What we check</h2>
+  <ul class="checks">
+    <li><strong>Your database:</strong> Supabase tables without row-level security, rules that let anyone change every row, functions that run any SQL, and Firebase rules open to anyone.</li>
+    <li><strong>Your keys:</strong> the Supabase admin key, OpenAI or Gemini keys in the website, secrets in <code>VITE_</code> / <code>NEXT_PUBLIC_</code> settings, passwords written into the code, and keys left anywhere in your project's history.</li>
+    <li><strong>Your code:</strong> SQL and NoSQL injection, visitor input shown unescaped (XSS), commands built from what visitors type, files opened from a name they send, unlocked login cookies, and more, in JavaScript, TypeScript, Python, Java, Go, Ruby, PHP and C#.</li>
+    <li><strong>The basics:</strong> known vulnerabilities in your libraries, whether your tests pass, and whether your live site is up and secure.</li>
+  </ul>
+
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><span>Send a link to your repository (read-only access is enough) or a zip of the code.</span></li>
+    <li><span>Within 48 hours you get a report like <a href="sample-report.html">this sample</a>: every problem with the file, the line and the code, why it matters and what to do. Keys are never shown in full.</span></li>
+    <li><span>Want it fixed? Each fix arrives as a reviewed change you approve, with a record of what checked it. Nothing touches your app without your yes.</span></li>
+  </ol>
+
+  <h2>Your code stays yours</h2>
+  <ul class="checks">
+    <li>The check runs on our own machine with fixed rules. No AI service reads your code to produce the report, and the same code always gets the same result.</li>
+    <li>Your code is deleted when the work is done, and never shared or used for anything else.</li>
+    <li>What it does not do: it is not a full penetration test, and it cannot judge your business logic. The report says plainly what was and was not checked.</li>
+  </ul>
+
+  <div class="cta">
+    <h2>Founding pilots: 3 places</h2>
+    <p>The full source code review and report for ₹25,000 (about $299), in return for honest feedback and permission to name you as a customer. Fixes are quoted per app. Facing a customer's security review? Ask about checking your answers against your code, <a href="claims-vs-code.html">like this</a>.</p>
+    <a class="btn" href="mailto:shresthakp07@gmail.com?subject=Source%20code%20review">Get your code reviewed</a><a class="btn ghost" href="sample-report.html">See a sample report</a>
+  </div>
+
+  <p class="note">The sample report is from a small demo app we made with the mistakes AI app builders most often ship with; every key in it is fake.</p>
+</main>
+</body>
+</html>

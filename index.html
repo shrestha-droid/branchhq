@@ -329,6 +329,7 @@
       <a href="#office">The office</a>
       <a href="#projects">Your codebase</a>
       <a href="#provenance">Provenance</a>
+      <a href="#health">Health Check</a>
       <a href="#measured">Numbers</a>
       <a href="#install">Install</a>
       <a class="pill dl" href="#install">Download</a>
@@ -475,6 +476,35 @@ ok  line counts match: 6,212 of 19,786 AI-written
 
 Every check passed</div>
         <p class="intro" style="margin:10px 20px 16px;font-size:13px">Example output.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="health" class="wrap">
+    <div class="kicker reveal">Health Check</div>
+    <h2 class="reveal d1">What your answers say, and what your code does. <em>At the exact line.</em></h2>
+    <p class="intro reveal d2">A security check for any repository, built for the mistakes AI app builders ship with. Fixed rules, no AI model: the same code always gets the same result, and nothing is sent anywhere to produce it.</p>
+    <div class="split">
+      <ul class="points reveal">
+        <li><div class="dot">1</div><div><b>The database left open</b><span>Supabase tables without row-level security, rules that let anyone change every row, functions that run any SQL, Firebase rules open to everyone.</span></div></li>
+        <li><div class="dot">2</div><div><b>Keys where they should not be</b><span>The Supabase admin key in the code, secret keys copied into the website through VITE_ or NEXT_PUBLIC_ settings, and keys left anywhere in the project's history.</span></div></li>
+        <li><div class="dot">3</div><div><b>Visitor input reaching something dangerous</b><span>SQL and NoSQL injection, XSS, commands and file paths built from what visitors send, in JavaScript, TypeScript, Python, Java, Go, Ruby, PHP and C#.</span></div></li>
+        <li><div class="dot">4</div><div><b>Proof, not opinions</b><span>Every finding comes with its file, line and code, with keys masked, and a Fix this button that hands it to the team as a reviewed change.</span></div></li>
+        <li><div class="dot">→</div><div><b>Facing a security review or a VAPT audit?</b><span>We review your source code first and hand you every problem, with its fix, in 48 hours. <a href="check.html">Get your code reviewed</a> · <a href="claims-vs-code.html">see an example</a></span></div></li>
+      </ul>
+      <div class="mock reveal d2">
+        <div class="mock-head">
+          <h4>Measured on real code</h4>
+          <div class="chips"><span class="chip">34 of 94 public Lovable apps: at least one serious problem</span><span class="chip n">0 false alarms on 17 well-made codebases</span></div>
+        </div>
+        <div class="trailer"><b>Serious · Database tables anyone can read</b>
+supabase/migrations/…_init.sql:1
+  create table public.bookings (
+
+<b>Serious · The Supabase admin key is in the code</b>
+src/integrations/supabase/client.ts:5
+  const SUPABASE_KEY = 'eyJ…'</div>
+        <p class="intro" style="margin:10px 20px 16px;font-size:13px">From a demo app with planted mistakes; every key in it is fake. Each finding in the 94 apps was read by hand before it was counted.</p>
       </div>
     </div>
   </section>

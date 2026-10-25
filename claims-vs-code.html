@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claims vs Code</title>
+<meta name="description" content="Five questions a customer's security reviewer asks, what the company answered, and what its code actually does, with the file and line as proof.">
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); --bad: #ff9b9b; --ok: #8fe3b0; }
+  body { margin: 0; background: #04050a; color: var(--text); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; line-height: 1.65; }
+  main { max-width: 820px; margin: 0 auto; padding: 64px 16px 96px; }
+  a { color: var(--accent-soft); }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 6vw, 56px); line-height: 1.05; margin: 14px 0 12px; }
+  .lead { font-size: 17px; color: var(--muted); margin: 0; }
+  .summary { margin: 32px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .summary div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .summary b { display: block; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 40px; line-height: 1; }
+  .summary span { color: var(--muted); font-size: 13.5px; }
+  .q { margin: 28px 0 0; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 22px 18px; }
+  .q h2 { margin: 0; font-size: 17px; font-weight: 600; }
+  .q .num { font-family: ui-monospace, Menlo, monospace; color: var(--accent-soft); font-size: 13px; margin-right: 8px; }
+  .row { display: grid; grid-template-columns: 130px 1fr; gap: 12px; margin-top: 14px; }
+  .row .label { color: var(--faint); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; padding-top: 3px; }
+  .row p { margin: 0; color: var(--muted); }
+  .verdict { display: inline-block; font-size: 12.5px; font-weight: 600; border-radius: 999px; padding: 2px 10px; border: 1px solid; }
+  .verdict.bad { color: var(--bad); border-color: rgba(255, 155, 155, .4); }
+  pre { margin: 8px 0 0; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-x: auto; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: #d9dcff; }
+  .at { display: block; color: var(--accent-soft); font-size: 12px; margin-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 600; margin: 44px 0 0; }
+  ul { color: var(--muted); padding-left: 20px; }
+  .note { margin-top: 32px; color: var(--faint); font-size: 13px; }
+  @media (max-width: 600px) { .summary { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; gap: 2px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><a href="./" style="color:inherit;text-decoration:none">← Branch HQ</a> · Claims vs code</div>
+  <h1>What Bookly told the reviewer, and what its code does.</h1>
+  <p class="lead">Five questions from a customer's security review. For each one, Bookly's answer, what the code actually does, and the exact file and line that proves it.</p>
+
+  <div class="summary">
+    <div><b>5</b><span>answers checked against the code</span></div>
+    <div><b style="color:var(--bad)">5</b><span>contradicted by the code</span></div>
+    <div><b>10</b><span>file:line proofs, keys masked</span></div>
+  </div>
+
+  <section class="q">
+    <h2><span class="num">Q1</span>Can a customer only see their own data?</h2>
+    <div class="row"><div class="label">Bookly said</div><p>"Yes. Access to customer records is restricted so each customer can only see their own bookings."</p></div>
+    <div class="row"><div class="label">The code</div><div><span class="verdict bad">Contradicts the answer</span>
+      <p style="margin-top:8px">The <code>bookings</code> table has no row-level security, so anyone with the public key every visitor's browser holds can read every booking. A database function also runs any SQL it is given, and the website calls it.</p>
+      <pre><span class="at">supabase/migrations/20260101000000_init.sql:1</span><code>create table public.bookings (</code></pre>
+      <pre><span class="at">supabase/migrations/20260101000000_init.sql:15</span><code>create or replace function public.exec_sql(sql text) returns void language plpgsql security definer as $$ begin execute sql; end $$;</code></pre>
+      <pre><span class="at">src/components/Admin.tsx:10</span><code>return supabase.rpc('exec_sql', { sql })</code></pre></div></div>
+  </section>
+
+  <section class="q">
+    <h2><span class="num">Q2</span>Are passwords and keys kept out of the source code?</h2>
+    <div class="row"><div class="label">Bookly said</div><p>"Yes. All secrets are stored in environment variables, never in code."</p></div>
+    <div class="row"><div class="label">The code</div><div><span class="verdict bad">Contradicts the answer</span>
+      <p style="margin-top:8px">An admin password and the Supabase admin key (which bypasses every database rule) are written into the code, and the file of secrets is committed to the repository.</p>
+      <pre><span class="at">src/components/Admin.tsx:3</span><code>const ADMIN_PASSWORD = 'book…'</code></pre>
+      <pre><span class="at">src/integrations/supabase/client.ts:5</span><code>const SUPABASE_KEY = 'eyJ…'</code></pre>
+      <pre><span class="at">.env</span><code>committed to the repository</code></pre></div></div>
+  </section>
+
+  <section class="q">
+    <h2><span class="num">Q3</span>Are third-party API keys kept on the server?</h2>
+    <div class="row"><div class="label">Bookly said</div><p>"Yes. Calls to outside services are made from our backend."</p></div>
+    <div class="row"><div class="label">The code</div><div><span class="verdict bad">Contradicts the answer</span>
+      <p style="margin-top:8px">The OpenAI key is read from a <code>VITE_</code> setting, which is copied into the website itself, so every visitor can read it and spend on it.</p>
+      <pre><span class="at">src/components/Assistant.tsx:3</span><code>const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY, dangerouslyAllowBrowser: true })</code></pre>
+      <pre><span class="at">.env:3</span><code>VITE_OPENAI_API_KEY=sk-p…</code></pre></div></div>
+  </section>
+
+  <section class="q">
+    <h2><span class="num">Q4</span>Are database queries protected against injection?</h2>
+    <div class="row"><div class="label">Bookly said</div><p>"Yes. All queries are parameterised."</p></div>
+    <div class="row"><div class="label">The code</div><div><span class="verdict bad">Contradicts the answer</span>
+      <p style="margin-top:8px">A name a visitor types is pasted straight into the SQL text, so they can read or delete data they should not reach.</p>
+      <pre><span class="at">server/index.ts:9</span><code>const rows = await db.query(`SELECT * FROM bookings WHERE customer_name = '${name}'`)</code></pre></div></div>
+  </section>
+
+  <section class="q">
+    <h2><span class="num">Q5</span>Does the server only accept requests from your own website?</h2>
+    <div class="row"><div class="label">Bookly said</div><p>"Yes. Cross-origin requests are restricted to our domain."</p></div>
+    <div class="row"><div class="label">The code</div><div><span class="verdict bad">Contradicts the answer</span>
+      <p style="margin-top:8px">The server accepts requests from any website together with the visitor's login cookies, so another site can act as a logged-in user.</p>
+      <pre><span class="at">server/index.ts:5</span><code>app.use(cors({ origin: true, credentials: true }))</code></pre></div></div>
+  </section>
+
+  <h3>How this was produced</h3>
+  <ul>
+    <li>The code side comes from Branch HQ's Health Check: fixed rules, no AI model, and the same code always gives the same result.</li>
+    <li>Keys are never shown in full.</li>
+    <li>Each check is recorded in a tamper-evident log, so the evidence can be shown later exactly as it was found.</li>
+    <li>The code stays on our machine and is deleted when the work is done.</li>
+  </ul>
+
+  <h3>What this does not cover</h3>
+  <ul>
+    <li>Settings changed only in the Supabase dashboard; worth confirming there.</li>
+    <li>Business-logic flaws, and anything a manual penetration test would find.</li>
+    <li>This is evidence for a security review. It is not a certification.</li>
+  </ul>
+
+  <p style="margin-top:36px"><a href="check.html" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;border-radius:10px;padding:11px 18px">Get your code reviewed</a></p>
+
+  <p class="note">Bookly is a demo app we built with the mistakes AI app builders most often ship with. Its answers are examples of what companies typically write. Every key in it is fake.</p>
+</main>
+</body>
+</html>

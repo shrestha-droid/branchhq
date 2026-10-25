@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Health Check: bookly-sample</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #1c1d2b; font-size: 12px; line-height: 1.55; }
+  .band { background: linear-gradient(120deg, #2a2670, #5e5ce6); color: #fff; padding: 24px 28px; border-radius: 14px; }
+  .brand { font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .22em; opacity: .85; }
+  h1 { font-family: "Iowan Old Style", Georgia, serif; font-weight: 400; font-size: 32px; margin: 8px 0 2px; }
+  .meta { font-size: 11px; opacity: .85; }
+  .verdict { margin: 18px 0 6px; padding: 13px 16px; border-radius: 12px; font-size: 13.5px; background: #fdf0ef; border: 1px solid #f3cfcb; }
+  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .count { border: 1px solid #e6e6f0; border-radius: 10px; padding: 10px 12px; }
+  .count b { font-family: Georgia, serif; font-size: 24px; display: block; }
+  h2 { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #5e5ce6; margin: 22px 0 8px; break-after: avoid; page-break-after: avoid; }
+  .keep { page-break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 7px 8px; border-bottom: 1px solid #f0f0f6; vertical-align: top; }
+  td:first-child { color: #6b6f86; width: 34%; }
+  .f { border: 1px solid #e6e6f0; border-left-width: 4px; border-radius: 10px; padding: 11px 14px; margin-bottom: 9px; page-break-inside: avoid; }
+  .f.high { border-left-color: #b3261e; } .f.medium { border-left-color: #b86e00; } .f.low { border-left-color: #8a8ea3; }
+  .fh { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+  .sev { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+  .sev.high { background: #fbe4e2; color: #b3261e; } .sev.medium { background: #fbefdc; color: #8f5500; } .sev.low { background: #efeff4; color: #5d6075; }
+  .f p { margin: 3px 0; } .fix { color: #2b2c3d; }
+  .where { margin-top: 5px; }
+  .evidence { margin-top: 6px; }
+  .evidence pre { margin: 2px 0 6px; padding: 6px 8px; background: #f4f5f8; border-radius: 6px; font-size: 11px; white-space: pre-wrap; word-break: break-all; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 9.5px; background: #f6f6fb; padding: 1px 5px; border-radius: 4px; display: inline-block; margin: 1px 0; word-break: break-all; }
+  .sub { color: #7a7e95; font-size: 10.5px; }
+  ul { margin: 0; padding-left: 18px; } li { margin-bottom: 3px; }
+  .foot { margin-top: 22px; padding-top: 10px; border-top: 1px solid #e6e6f0; font-size: 9.5px; color: #8a8ea3; }
+  .hash { word-break: break-all; }
+</style></head><body>
+  <div class="band">
+    <div class="brand">BRANCH HQ · HEALTH CHECK</div>
+    <h1>bookly-sample</h1>
+    <div class="meta">Checked 19 October 2026 · Prepared by Branch HQ</div>
+  </div>
+  <div class="verdict">7 serious problems need attention before this product takes on more users or data.</div>
+  <div class="counts">
+    <div class="count"><b style="color:#b3261e">7</b>Serious</div>
+    <div class="count"><b style="color:#b86e00">2</b>Should fix</div>
+    <div class="count"><b style="color:#5d6075">0</b>Minor</div>
+  </div>
+
+  <h2>What was checked</h2>
+  <table>
+    <tr><td>Code scanned for security problems</td><td>4 files · React, Express, Supabase, TypeScript</td></tr>
+    <tr><td>Secret keys in the project's history</td><td>None found</td></tr>
+    <tr><td>Dependencies with known vulnerabilities</td><td>Not checked</td></tr>
+    <tr><td>The project's own tests</td><td>None found</td></tr>
+    <tr><td>Live site</td><td>Not checked</td></tr>
+  </table>
+
+  <h2>Findings</h2>
+  
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>1. Database queries built from user input (SQL injection)</b></div>
+      <p>Text a visitor types is pasted straight into a database command, which can let them read or delete data they should not reach.</p>
+      <p class="fix"><b>What to do:</b> Pass every value as a query parameter instead of joining it into the SQL text.</p>
+      <div class="where"><code>server/index.ts:9</code></div>
+      <div class="evidence"><div><span class="sub">server/index.ts:9</span><pre>const rows = await db.query(`SELECT * FROM bookings WHERE customer_name = '${name}'`)</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>2. A secret is written into the code</b></div>
+      <p>A password, token or API key sits in the source code. Anyone who can see the code -- a past freelancer, a leaked copy -- can use it.</p>
+      <p class="fix"><b>What to do:</b> Move it to an environment variable, then revoke the old key where it was issued and create a new one.</p>
+      <div class="where"><code>src/components/Admin.tsx:3</code></div>
+      <div class="evidence"><div><span class="sub">src/components/Admin.tsx:3</span><pre>const ADMIN_PASSWORD = 'book…'</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>3. Anyone can run any command on the database</b></div>
+      <p>The app has a database function that runs whatever SQL it is given, and the website calls it with the public key every visitor has. Anyone can use it to read, change or delete all data.</p>
+      <p class="fix"><b>What to do:</b> Remove the function from the database now. Replace each use with a specific, limited function or a normal query that row-level security protects.</p>
+      <div class="where"><code>src/components/Admin.tsx:10</code> <code>supabase/migrations/20260101000000_init.sql:15</code></div>
+      <div class="evidence"><div><span class="sub">src/components/Admin.tsx:10</span><pre>return supabase.rpc('exec_sql', { sql })</pre></div><div><span class="sub">supabase/migrations/20260101000000_init.sql:15</span><pre>create or replace function public.exec_sql(sql text) returns void language plpgsql security definer as $$ begin execute sql; end $$;</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>4. Secret keys sent to every visitor's browser</b></div>
+      <p>Settings starting with VITE_, NEXT_PUBLIC_, REACT_APP_ or EXPO_PUBLIC_ are copied into the website itself, so anyone can read these keys in their browser and use them -- running up your bill or reaching your data.</p>
+      <p class="fix"><b>What to do:</b> Move the call that needs the key to a server function, keep the key there without the public prefix, and replace the exposed key.</p>
+      <div class="where"><code>src/components/Assistant.tsx:3</code> <code>.env:3</code></div>
+      <div class="evidence"><div><span class="sub">src/components/Assistant.tsx:3</span><pre>const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY, dangerouslyAllowBrowser: true })</pre></div><div><span class="sub">.env:3</span><pre>VITE_OPENAI_API_KEY=sk-p…</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>5. The Supabase admin key is in the code</b></div>
+      <p>The service_role key bypasses every database rule. Anyone who sees it -- in the code, a leaked copy, or the browser -- can read and change all data.</p>
+      <p class="fix"><b>What to do:</b> Revoke it in Supabase now, keep the new one only on the server (an environment variable), and use the anon key in the app.</p>
+      <div class="where"><code>src/integrations/supabase/client.ts:5</code></div>
+      <div class="evidence"><div><span class="sub">src/integrations/supabase/client.ts:5</span><pre>const SUPABASE_KEY = 'eyJ…</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>6. Database tables anyone can read (no row-level security)</b></div>
+      <p>These Supabase tables are created without row-level security, so anyone with the public key -- which every visitor's browser has -- can read, and often change, every row. (Unless it was switched on later in the Supabase dashboard: worth checking there.)</p>
+      <p class="fix"><b>What to do:</b> Enable row-level security on each table and add policies that let people see only their own rows.</p>
+      <div class="where"><code>supabase/migrations/20260101000000_init.sql:1</code></div>
+      <div class="evidence"><div><span class="sub">supabase/migrations/20260101000000_init.sql:1</span><pre>create table public.bookings (</pre></div></div>
+    </div>
+    <div class="f high">
+      <div class="fh"><span class="sev high">Serious</span><b>7. Environment files with secrets are committed</b></div>
+      <p>These files hold passwords or keys and are part of the repository, so every copy of the code carries them.</p>
+      <p class="fix"><b>What to do:</b> Remove them from git, add .env to .gitignore, and replace every key they contained.</p>
+      <div class="where"><code>.env</code></div>
+      
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>8. Any website can make logged-in requests to the server</b></div>
+      <p>The server accepts requests from any website together with the visitor's login cookies, so another site can act as your logged-in users.</p>
+      <p class="fix"><b>What to do:</b> List the exact websites allowed (your own domain), instead of &quot;*&quot; or true.</p>
+      <div class="where"><code>server/index.ts:5</code></div>
+      <div class="evidence"><div><span class="sub">server/index.ts:5</span><pre>app.use(cors({ origin: true, credentials: true }))</pre></div></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>9. No automated tests</b></div>
+      <p>Nothing checks automatically that the product still works after a change, so every change is a risk that is only found by users.</p>
+      <p class="fix"><b>What to do:</b> Add tests for the few flows that matter most (sign-up, checkout, booking) and run them before every release.</p>
+      
+      
+    </div>
+
+  <div class="keep"><h2>Not covered by this report</h2><ul class="sub"><li>Dependencies were not checked for known vulnerabilities: there is no package-lock.json.</li><li>The live site was not checked (no address was given).</li></ul></div>
+
+  <div class="foot">
+    Automated checks find known kinds of problem; they are not a full manual security audit, and a clean result does not guarantee there are none.
+    Generated by Branch HQ 1.0.41. Nothing in the project was changed by this check.
+    
+  </div>
+</body></html>
