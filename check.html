@@ -160,7 +160,7 @@
     <label class="wide">Anything we should know<textarea name="details" placeholder="A link to the app or repository, what worries you, or what your customer or auditor asked for."></textarea></label>
     <button type="submit" id="sendBtn">Send request</button>
     <p class="small wide" id="formStatus" role="status" hidden></p>
-    <p class="small wide">No code needed yet. Your details reach us by email (through FormSubmit) and are used only to reply. Prefer email? <a href="mailto:shresthakp07@gmail.com?subject=Security%20review">Write to us</a>.</p>
+    <p class="small wide">No code needed yet. Your details are stored securely for us to reply and used for nothing else. Prefer email? <a href="mailto:shresthakp07@gmail.com?subject=Security%20review">Write to us</a>.</p>
   </form>
   <p class="note">Pay by UPI, bank transfer or card, with an invoice, once you have agreed the price. The first three customers on each plan get the founding price in return for honest feedback and permission to name them. <a href="sample-report.html">See a sample report</a>.</p>
   <script>
@@ -175,6 +175,14 @@
       const btn = document.getElementById('sendBtn'), status = document.getElementById('formStatus')
       btn.disabled = true; btn.textContent = 'Sending…'
       const data = Object.fromEntries(new FormData(form))
+      // 1. Our own database (Supabase): visitors may only add a request, never read one. The publishable key is
+      //    public by design; the table's rules allow inserting these fields and nothing else.
+      const row = { name: data.name, email: data.email, company: data.company || null, need: data.need, stack: data.stack || null, size: data.size || null, deadline: data.deadline || null, budget: data.budget || null, details: data.details || null }
+      try {
+        const r = await fetch('https://krnevrwutazkdnyxvjnl.supabase.co/rest/v1/review_requests', { method: 'POST', headers: { apikey: 'sb_publishable_53JbsTaRjIclB7cttWKpKg_MXu8sOSl', 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(row), signal: AbortSignal.timeout(10000) })
+        if (r.ok) { location.href = 'thanks.html'; return }
+      } catch { /* try the next way */ }
+      // 2. FormSubmit, to the owner's email.
       try {
         const r = await fetch('https://formsubmit.co/ajax/shresthakp07@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data), signal: AbortSignal.timeout(10000) })
         const j = await r.json().catch(() => ({}))
