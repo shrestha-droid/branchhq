@@ -42,6 +42,15 @@
   .plan ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; flex: 1; }
   .plan ul li { margin-bottom: 4px; }
   .plan .btn { align-self: flex-start; }
+  form.request { margin: 16px 0 0; background: var(--card); border: 1px solid rgba(165, 163, 255, 0.35); border-radius: 18px; padding: 22px 22px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 14px; }
+  form.request label { display: grid; gap: 6px; font-size: 13.5px; color: var(--muted); }
+  form.request .wide { grid-column: 1 / -1; }
+  form.request input, form.request select, form.request textarea { font: inherit; font-size: 14.5px; color: var(--text); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  form.request textarea { min-height: 96px; resize: vertical; }
+  form.request input:focus, form.request select:focus, form.request textarea:focus { outline: none; border-color: var(--accent-soft); }
+  form.request button { justify-self: start; font: inherit; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 10px; padding: 11px 18px; cursor: pointer; }
+  form.request .small { font-size: 12.5px; color: var(--faint); }
+  @media (max-width: 640px) { form.request { grid-template-columns: 1fr; } }
   .free { margin: 12px 0 0; background: var(--card); border: 1px dashed var(--line); border-radius: 14px; padding: 14px 18px; color: var(--muted); }
   @media (max-width: 640px) { .plans { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .stat { grid-template-columns: 1fr; } .btn.ghost { margin-left: 0; } }
@@ -87,31 +96,76 @@
     <div class="plan">
       <span class="who">Launching an app</span>
       <h3>Launch review</h3>
-      <div class="price">₹4,999<small>about $79</small></div>
+      <div class="price">from ₹4,999<small>about $79</small></div>
       <ul>
         <li>We run the full review on your code</li>
         <li>Your report: every problem, its line, what to do</li>
         <li>A 30-minute call on what matters most and in what order</li>
         <li>Want us to fix them? From ₹15,000, each fix checked again</li>
       </ul>
-      <a class="btn" href="mailto:shresthakp07@gmail.com?subject=Launch%20review">Book a launch review</a>
+      <a class="btn" href="#request" data-need="Launch review">Ask for a launch review</a>
     </div>
     <div class="plan main">
       <span class="who">Facing a security review or audit</span>
       <h3>Pre-audit review</h3>
-      <div class="price">₹25,000<small>about $299 · founding price</small></div>
+      <div class="price">from ₹25,000<small>about $299 · founding price</small></div>
       <ul>
         <li>Everything in the launch review</li>
         <li>A client-ready PDF report you can share with your customer</li>
         <li>Guidance on every fix, then a re-check that shows them fixed</li>
         <li>Your security answers checked against your code, <a href="claims-vs-code.html">like this</a></li>
       </ul>
-      <a class="btn" href="mailto:shresthakp07@gmail.com?subject=Pre-audit%20review">Book a pre-audit review</a>
+      <a class="btn" href="#request" data-need="Pre-audit review">Ask for a pre-audit review</a>
     </div>
   </div>
-  <p class="free"><strong>Building apps for clients?</strong> Every client app checked before handover, from ₹10,000 a month. <a href="mailto:shresthakp07@gmail.com?subject=Agency%20plan">Ask about the agency plan</a>.<br>
+  <p class="free"><strong>Building apps for clients?</strong> Every client app checked before handover, from ₹10,000 a month. <a href="#request" data-need="Agency plan">Ask about the agency plan</a>.<br>
   <strong>Prefer to check it yourself?</strong> The Health Check in the free <a href="./#install">Branch HQ app</a> runs on your own computer, with no AI key, and your code never leaves it.</p>
-  <p class="note">Pay by UPI, bank transfer or card, with an invoice. The first three customers on each plan get the founding price in return for honest feedback and permission to name them. <a href="sample-report.html">See a sample report</a>.</p>
+  <h2 id="request">Tell us what you need</h2>
+  <p class="lead" style="font-size:16px;margin-top:8px">We reply within a day with a fixed price for your app. Prices depend on the size of the code and how soon you need it; nothing is charged until you agree.</p>
+  <form class="request" action="https://formsubmit.co/shresthakp07@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="Branch HQ: new review request">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="https://shrestha-droid.github.io/branchhq/thanks.html">
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+    <label>Your name<input name="name" required autocomplete="name"></label>
+    <label>Work email<input name="email" type="email" required autocomplete="email"></label>
+    <label>Company or project<input name="company" autocomplete="organization"></label>
+    <label>What you need
+      <select name="need" id="need" required>
+        <option value="">Choose one</option>
+        <option>Launch review</option>
+        <option>Launch review + fixes</option>
+        <option>Pre-audit review</option>
+        <option>Agency plan</option>
+        <option>Not sure yet</option>
+      </select></label>
+    <label>Built with<input name="stack" placeholder="Lovable + Supabase, Next.js, Django…"></label>
+    <label>Roughly how big
+      <select name="size">
+        <option>Small (one app, under 100 files)</option>
+        <option>Medium (100–1,000 files)</option>
+        <option>Large (over 1,000 files)</option>
+        <option>Several apps</option>
+        <option>Don't know</option>
+      </select></label>
+    <label>When do you need it<input name="deadline" placeholder="Launch date, audit date, or 'no rush'"></label>
+    <label>Budget in mind
+      <select name="budget">
+        <option>Not sure</option>
+        <option>Under ₹10,000</option>
+        <option>₹10,000–25,000</option>
+        <option>₹25,000–75,000</option>
+        <option>Over ₹75,000</option>
+      </select></label>
+    <label class="wide">Anything we should know<textarea name="details" placeholder="A link to the app or repository, what worries you, or what your customer or auditor asked for."></textarea></label>
+    <button type="submit">Send request</button>
+    <p class="small wide">No code needed yet. Your details reach us by email (through FormSubmit) and are used only to reply. Prefer email? <a href="mailto:shresthakp07@gmail.com?subject=Security%20review">Write to us</a>.</p>
+  </form>
+  <p class="note">Pay by UPI, bank transfer or card, with an invoice, once you have agreed the price. The first three customers on each plan get the founding price in return for honest feedback and permission to name them. <a href="sample-report.html">See a sample report</a>.</p>
+  <script>
+    // A plan's button chooses it in the form.
+    document.querySelectorAll('a[data-need]').forEach(a => a.addEventListener('click', () => { const s = document.getElementById('need'); if (s) s.value = a.dataset.need }))
+  </script>
 
   <p class="note">The sample report is from a small demo app we made with the mistakes AI app builders most often ship with; every key in it is fake.</p>
 </main>
