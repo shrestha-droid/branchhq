@@ -122,7 +122,7 @@
   <strong>Prefer to check it yourself?</strong> The Health Check in the free <a href="./#install">Branch HQ app</a> runs on your own computer, with no AI key, and your code never leaves it.</p>
   <h2 id="request">Tell us what you need</h2>
   <p class="lead" style="font-size:16px;margin-top:8px">We reply within a day with a fixed price for your app. Prices depend on the size of the code and how soon you need it; nothing is charged until you agree.</p>
-  <form class="request" action="https://formsubmit.co/shresthakp07@gmail.com" method="POST">
+  <form class="request" id="requestForm" action="https://formsubmit.co/shresthakp07@gmail.com" method="POST">
     <input type="hidden" name="_subject" value="Branch HQ: new review request">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_next" value="https://shrestha-droid.github.io/branchhq/thanks.html">
@@ -158,13 +158,35 @@
         <option>Over ₹75,000</option>
       </select></label>
     <label class="wide">Anything we should know<textarea name="details" placeholder="A link to the app or repository, what worries you, or what your customer or auditor asked for."></textarea></label>
-    <button type="submit">Send request</button>
+    <button type="submit" id="sendBtn">Send request</button>
+    <p class="small wide" id="formStatus" role="status" hidden></p>
     <p class="small wide">No code needed yet. Your details reach us by email (through FormSubmit) and are used only to reply. Prefer email? <a href="mailto:shresthakp07@gmail.com?subject=Security%20review">Write to us</a>.</p>
   </form>
   <p class="note">Pay by UPI, bank transfer or card, with an invoice, once you have agreed the price. The first three customers on each plan get the founding price in return for honest feedback and permission to name them. <a href="sample-report.html">See a sample report</a>.</p>
   <script>
     // A plan's button chooses it in the form.
     document.querySelectorAll('a[data-need]').forEach(a => a.addEventListener('click', () => { const s = document.getElementById('need'); if (s) s.value = a.dataset.need }))
+    // Sent through FormSubmit; if that service is down or slow (it was, 29 October), the visitor's email app opens
+    // with the whole request written out, so no request is lost.
+    const form = document.getElementById('requestForm')
+    form.addEventListener('submit', async e => {
+      e.preventDefault()
+      if (form.querySelector('[name=_honey]').value) return
+      const btn = document.getElementById('sendBtn'), status = document.getElementById('formStatus')
+      btn.disabled = true; btn.textContent = 'Sending…'
+      const data = Object.fromEntries(new FormData(form))
+      try {
+        const r = await fetch('https://formsubmit.co/ajax/shresthakp07@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data), signal: AbortSignal.timeout(10000) })
+        const j = await r.json().catch(() => ({}))
+        if (r.ok && String(j.success) === 'true') { location.href = 'thanks.html'; return }
+        throw new Error('not sent')
+      } catch {
+        const lines = ['Name: ' + data.name, 'Email: ' + data.email, 'Company: ' + (data.company || '-'), 'Need: ' + data.need, 'Built with: ' + (data.stack || '-'), 'Size: ' + data.size, 'When: ' + (data.deadline || '-'), 'Budget: ' + data.budget, '', data.details || '']
+        status.hidden = false
+        status.textContent = 'Our form service is not answering right now, so your email app will open with your request written out. Just press send.'
+        location.href = 'mailto:shresthakp07@gmail.com?subject=' + encodeURIComponent('Security review request: ' + data.need) + '&body=' + encodeURIComponent(lines.join('\n'))
+      } finally { btn.disabled = false; btn.textContent = 'Send request' }
+    })
   </script>
 
   <p class="note">The sample report is from a small demo app we made with the mistakes AI app builders most often ship with; every key in it is fake.</p>
