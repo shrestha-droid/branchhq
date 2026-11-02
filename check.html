@@ -160,7 +160,7 @@
     <label class="wide">Anything we should know<textarea name="details" placeholder="A link to the app or repository, what worries you, or what your customer or auditor asked for."></textarea></label>
     <button type="submit" id="sendBtn">Send request</button>
     <p class="small wide" id="formStatus" role="status" hidden></p>
-    <p class="small wide">No code needed yet. Your details are stored securely for us to reply and used for nothing else. Prefer email? <a href="mailto:shresthakp07@gmail.com?subject=Security%20review">Write to us</a>.</p>
+    <p class="small wide">No code needed yet. Your details are stored securely for us to reply and used for nothing else. Prefer email? <a href="mailto:hello@branchhq.online?subject=Security%20review">Write to us</a>.</p>
   </form>
   <p class="note">Pay by UPI, bank transfer or card, with an invoice, once you have agreed the price. The first three customers on the pre-audit review get the founding price in return for honest feedback and permission to name them. <a href="sample-report.html">See a sample report</a>.</p>
   <script>
@@ -196,7 +196,7 @@
         const lines = ['Name: ' + data.name, 'Email: ' + data.email, 'Company: ' + (data.company || '-'), 'Need: ' + data.need, 'Built with: ' + (data.stack || '-'), 'Size: ' + data.size, 'When: ' + (data.deadline || '-'), 'Budget: ' + data.budget, '', data.details || '']
         status.hidden = false
         status.textContent = 'Our form service is not answering right now, so your email app will open with your request written out. Just press send.'
-        location.href = 'mailto:shresthakp07@gmail.com?subject=' + encodeURIComponent('Security review request: ' + data.need) + '&body=' + encodeURIComponent(lines.join('\n'))
+        location.href = 'mailto:hello@branchhq.online?subject=' + encodeURIComponent('Security review request: ' + data.need) + '&body=' + encodeURIComponent(lines.join('\n'))
       } finally { btn.disabled = false; btn.textContent = 'Send request' }
     })
   </script>
