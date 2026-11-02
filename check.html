@@ -180,7 +180,11 @@
       const row = { name: data.name, email: data.email, company: data.company || null, need: data.need, stack: data.stack || null, size: data.size || null, deadline: data.deadline || null, budget: data.budget || null, details: data.details || null }
       try {
         const r = await fetch('https://krnevrwutazkdnyxvjnl.supabase.co/rest/v1/review_requests', { method: 'POST', headers: { apikey: 'sb_publishable_53JbsTaRjIclB7cttWKpKg_MXu8sOSl', 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(row), signal: AbortSignal.timeout(10000) })
-        if (r.ok) { location.href = 'thanks.html'; return }
+        if (r.ok) {
+          // The request is saved; this only tells the owner it arrived, so it must not hold the visitor up.
+          fetch('https://formsubmit.co/ajax/shresthakp07@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data), keepalive: true }).catch(() => {})
+          location.href = 'thanks.html'; return
+        }
       } catch { /* try the next way */ }
       // 2. FormSubmit, to the owner's email.
       try {
