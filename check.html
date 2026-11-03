@@ -7,54 +7,7 @@
 <meta name="description" content="Find and fix the security holes in your app before launch or before an audit: every problem at its exact file and line, explained plainly, with the fixes. Fixed prices from ₹15,000.">
 <link rel="icon" type="image/png" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); }
-  body { margin: 0; background: radial-gradient(55% 45% at 20% -5%, rgba(70, 95, 200, 0.28), transparent 70%), #04050a; color: var(--text); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; line-height: 1.7; }
-  main { max-width: 760px; margin: 0 auto; padding: 72px 20px 96px; }
-  a { color: var(--accent-soft); }
-  h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(40px, 7vw, 64px); line-height: 1.02; margin: 18px 0 14px; }
-  .lead { font-size: 18px; color: var(--muted); margin: 0; }
-  .stat { margin: 40px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; }
-  .stat b { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 64px; line-height: 1; color: #ff9b9b; }
-  .stat p { margin: 0; color: var(--muted); }
-  .stat small { display: block; margin-top: 6px; color: var(--faint); font-size: 12.5px; line-height: 1.5; }
-  h2 { font-size: 15px; font-weight: 600; margin: 48px 0 0; letter-spacing: .01em; }
-  ul.checks { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  ul.checks li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; color: var(--muted); }
-  ul.checks li strong { color: var(--text); font-weight: 600; }
-  ol.steps { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: n; }
-  ol.steps li { counter-increment: n; display: grid; grid-template-columns: 30px 1fr; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; color: var(--muted); }
-  ol.steps li::before { content: counter(n); font-family: ui-monospace, Menlo, monospace; color: var(--accent-soft); font-size: 13px; padding-top: 2px; }
-  .cta { margin: 48px 0 0; background: linear-gradient(0deg, rgba(94, 92, 230, 0.16), rgba(94, 92, 230, 0.16)), var(--card); border: 1px solid rgba(165, 163, 255, 0.35); border-radius: 18px; padding: 26px 24px; }
-  .cta h2 { margin: 0; font-size: 20px; }
-  .cta p { margin: 8px 0 0; color: var(--muted); }
-  .btn { display: inline-block; margin-top: 16px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; border-radius: 10px; padding: 11px 18px; }
-  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); margin-left: 8px; }
-  .note { margin-top: 28px; color: var(--faint); font-size: 13px; }
-  code { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #d9dcff; overflow-wrap: anywhere; }
-  .plans { margin: 16px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .plan { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 20px 18px; display: flex; flex-direction: column; }
-  .plan.main { border-color: rgba(165, 163, 255, 0.45); }
-  .plan .who { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-  .plan h3 { margin: 6px 0 0; font-size: 17px; font-weight: 600; }
-  .plan .price { margin: 10px 0 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 36px; line-height: 1; }
-  .plan .price small { font-family: Inter, sans-serif; font-size: 13px; color: var(--faint); margin-left: 4px; }
-  .plan ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; flex: 1; }
-  .plan ul li { margin-bottom: 4px; }
-  .plan .btn { align-self: flex-start; }
-  form.request { margin: 16px 0 0; background: var(--card); border: 1px solid rgba(165, 163, 255, 0.35); border-radius: 18px; padding: 22px 22px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 14px; }
-  form.request label { display: grid; gap: 6px; font-size: 13.5px; color: var(--muted); }
-  form.request .wide { grid-column: 1 / -1; }
-  form.request input, form.request select, form.request textarea { font: inherit; font-size: 14.5px; color: var(--text); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-  form.request textarea { min-height: 96px; resize: vertical; }
-  form.request input:focus, form.request select:focus, form.request textarea:focus { outline: none; border-color: var(--accent-soft); }
-  form.request button { justify-self: start; font: inherit; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 10px; padding: 11px 18px; cursor: pointer; }
-  form.request .small { font-size: 12.5px; color: var(--faint); }
-  @media (max-width: 640px) { form.request { grid-template-columns: 1fr; } }
-  .free { margin: 12px 0 0; background: var(--card); border: 1px dashed var(--line); border-radius: 14px; padding: 14px 18px; color: var(--muted); }
-  @media (max-width: 640px) { .plans { grid-template-columns: 1fr; } }
-  @media (max-width: 560px) { .stat { grid-template-columns: 1fr; } .btn.ghost { margin-left: 0; } }
-</style>
+<link rel="stylesheet" href="offer.css">
 </head>
 <body>
 <main>
@@ -118,7 +71,8 @@
       <a class="btn" href="#request" data-need="Pre-audit review">Ask for a pre-audit review</a>
     </div>
   </div>
-  <p class="free"><strong>Building apps for clients?</strong> Every client app checked before handover, from ₹30,000 a month. <a href="#request" data-need="Agency plan">Ask about the agency plan</a>.<br>
+  <p class="free"><strong>Handling personal data in India?</strong> The DPDP Rules apply from 13 May 2027. <a href="dpdp.html">See the personal data review</a>: what your code stores, who receives it, and the gaps against the Act, with the file and line for each.<br>
+  <strong>Building apps for clients?</strong> Every client app checked before handover, from ₹30,000 a month. <a href="#request" data-need="Agency plan">Ask about the agency plan</a>.<br>
   <strong>Prefer to check it yourself?</strong> The Health Check in the free <a href="./#install">Branch HQ app</a> runs on your own computer, with no AI key, and your code never leaves it.</p>
   <h2 id="request">Tell us what you need</h2>
   <p class="lead" style="font-size:16px;margin-top:8px">We reply within a day with a fixed price for your app. Prices depend on the size of the code and how soon you need it; nothing is charged until you agree.</p>
@@ -137,6 +91,9 @@
         <option>Launch review + fixes</option>
         <option>Pre-audit review</option>
         <option>Agency plan</option>
+        <option>DPDP evidence pack</option>
+        <option>Monthly DPDP evidence</option>
+        <option>DPDP partner (consultants and law firms)</option>
         <option>Not sure yet</option>
       </select></label>
     <label>Built with<input name="stack" placeholder="Lovable + Supabase, Next.js, Django…"></label>
@@ -166,6 +123,8 @@
   <script>
     // A plan's button chooses it in the form.
     document.querySelectorAll('a[data-need]').forEach(a => a.addEventListener('click', () => { const s = document.getElementById('need'); if (s) s.value = a.dataset.need }))
+    // A plan chosen on another page (dpdp.html links here with ?need=).
+    const asked = new URLSearchParams(location.search).get('need'); if (asked) document.getElementById('need').value = asked
     // Sent through FormSubmit; if that service is down or slow (it was, 29 October), the visitor's email app opens
     // with the whole request written out, so no request is lost.
     const form = document.getElementById('requestForm')

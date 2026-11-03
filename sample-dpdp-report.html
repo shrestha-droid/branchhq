@@ -1,0 +1,157 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Personal data map: shiksha-tutors</title>
+<style>
+
+  @page { size: A4; margin: 16mm 15mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #1c1d2b; font-size: 12px; line-height: 1.55; }
+  .band { background: #5e5ce6; color: #fff; padding: 24px 28px; border-radius: 14px; }
+  .brand { font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .22em; opacity: .85; }
+  h1 { font-family: "Iowan Old Style", Georgia, serif; font-weight: 400; font-size: 32px; margin: 8px 0 2px; }
+  .meta { font-size: 11px; opacity: .85; }
+  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .count { border: 1px solid #e6e6f0; border-radius: 10px; padding: 10px 12px; }
+  .count b { font-family: Georgia, serif; font-size: 24px; display: block; }
+  h2 { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #5e5ce6; margin: 22px 0 8px; break-after: avoid; page-break-after: avoid; }
+  .keep { page-break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 7px 8px; border-bottom: 1px solid #f0f0f6; vertical-align: top; }
+  td:first-child { color: #6b6f86; width: 34%; }
+  .f { border: 1px solid #e6e6f0; border-left-width: 4px; border-radius: 10px; padding: 11px 14px; margin-bottom: 9px; page-break-inside: avoid; }
+  .f.high { border-left-color: #b3261e; } .f.medium { border-left-color: #b86e00; } .f.low { border-left-color: #8a8ea3; }
+  .fh { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+  .sev { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+  .sev.high { background: #fbe4e2; color: #b3261e; } .sev.medium { background: #fbefdc; color: #8f5500; } .sev.low { background: #efeff4; color: #5d6075; }
+  .f p { margin: 3px 0; } .fix { color: #2b2c3d; }
+  .where { margin-top: 5px; }
+  .evidence { margin-top: 6px; }
+  .evidence pre { margin: 2px 0 6px; padding: 6px 8px; background: #f4f5f8; border-radius: 6px; font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 9.5px; background: #f6f6fb; padding: 1px 5px; border-radius: 4px; display: inline-block; margin: 1px 0; word-break: break-all; }
+  .sub { color: #7a7e95; font-size: 10.5px; }
+  ul { margin: 0; padding-left: 18px; } li { margin-bottom: 3px; }
+  .foot { margin-top: 22px; padding-top: 10px; border-top: 1px solid #e6e6f0; font-size: 9.5px; color: #8a8ea3; }
+  .hash { word-break: break-all; }
+
+  .verdict { margin: 18px 0 6px; padding: 13px 16px; border-radius: 12px; font-size: 13.5px; background: #f1f0ff; border: 1px solid #dcdaff; }
+  table.grid td { width: auto; color: #1c1d2b; } table.grid td.k { color: #6b6f86; }
+  th { text-align: left; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #6b6f86; padding: 6px 8px; border-bottom: 1px solid #e6e6f0; }
+  .no { color: #b3261e; font-weight: 600; } .yes { color: #2f7d4a; }
+</style></head><body>
+  <div class="band">
+    <div class="brand">BRANCH HQ · PERSONAL DATA MAP · DPDP</div>
+    <h1>shiksha-tutors</h1>
+    <div class="meta">Read from the code on 4 November 2026 · Prepared by Branch HQ</div>
+  </div>
+  <div class="verdict">The code handles 7 kinds of personal data in 4 places and sends data to 5 companies (4 outside India). 8 gaps should be closed before the DPDP Rules apply on 13 May 2027.</div>
+  <div class="counts">
+    <div class="count"><b>7</b>Kinds of personal data</div>
+    <div class="count"><b>5</b>Companies receiving data</div>
+    <div class="count"><b style="color:#b86e00">8</b>Gaps to close</div>
+  </div>
+
+  <h2>Gaps against the DPDP Act and Rules</h2>
+  
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>1. Data goes to companies your privacy notice does not mention</b></div>
+      <p class="sub">Section 5 and Rule 3: an itemised notice; Section 8(2): processors under contract</p>
+      <p>The code sends data to Meta Pixel, OpenAI and Slack, and the privacy notice never names them. Enterprise customers' security reviews ask for this list too.</p>
+      <p class="fix"><b>What to do:</b> Name each of these with what it receives and why, and keep a contract with each one that processes personal data for you.</p>
+      <div class="where"><code>index.html:5</code> <code>supabase/functions/enrol/index.ts:4</code> <code>supabase/functions/enrol/index.ts:13</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>2. Personal data your privacy notice does not mention</b></div>
+      <p class="sub">Rule 3(a): an itemised description of the personal data</p>
+      <p>The code stores government ID, and the notice does not mention it.</p>
+      <p class="fix"><b>What to do:</b> Add each kind of personal data to the notice with the purpose it is used for, or stop collecting it.</p>
+      <div class="where"><code>supabase/migrations/20260901000000_init.sql:18</code> <code>supabase/migrations/20260901000000_init.sql:19</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>3. The privacy notice does not say how to complain</b></div>
+      <p class="sub">Section 5(1) and Rule 14: rights, a contact, and the route to the Data Protection Board</p>
+      <p>The notice found in the code gives no grievance contact and does not mention the Data Protection Board.</p>
+      <p class="fix"><b>What to do:</b> Add a grievance contact (or Data Protection Officer), how to exercise each right, and that a complaint can be made to the Data Protection Board of India. Answer requests within 90 days.</p>
+      <div class="where"><code>src/pages/PrivacyPolicy.tsx</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>4. Tracking starts without asking</b></div>
+      <p class="sub">Sections 6 and 7: consent before processing that needs it</p>
+      <p>Google Analytics and Meta Pixel are loaded, and no cookie or consent banner was found in the code, so tracking starts the moment someone opens the site.</p>
+      <p class="fix"><b>What to do:</b> Load analytics, advertising and session recording only after the visitor agrees, and keep a record of that choice.</p>
+      <div class="where"><code>index.html:3</code> <code>index.html:5</code></div>
+    </div>
+    <div class="f low">
+      <div class="fh"><span class="sev low">Check</span><b>5. No record of consent is kept</b></div>
+      <p class="sub">Section 6(10): where consent is the basis, the company must be able to prove it</p>
+      <p>Personal data is stored, but no table or field records when and to what each person agreed. Data people hand over for a service they asked for can rest on a legitimate use (Section 7) instead; anything else (marketing, analytics, sharing) needs consent you can prove, and a checkbox is not proof unless the answer is saved.</p>
+      <p class="fix"><b>What to do:</b> Save each consent with the person, the notice version, the purpose and the time, and record withdrawals the same way.</p>
+      <div class="where"><code>src/pages/Signup.tsx:10</code> <code>supabase/migrations/20260901000000_init.sql:3</code> <code>supabase/migrations/20260901000000_init.sql:4</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>6. No way for people to delete their data</b></div>
+      <p class="sub">Sections 6(4) and 12(3): withdraw consent and have the data erased</p>
+      <p>No account deletion or data erasure was found in the code. People can ask for both, and must be able to withdraw consent as easily as they gave it.</p>
+      <p class="fix"><b>What to do:</b> Add a &quot;delete my account&quot; step that removes the person's data (not only hides it), including copies sent to other services, and keep a record that it was done.</p>
+      
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>7. May hold children's data without parental consent</b></div>
+      <p class="sub">Section 9 and Rule 10: verifiable parental consent; no tracking or targeted ads for children</p>
+      <p>The &quot;students&quot; table looks like it holds data about students or children, and no parental consent or age check was found. The site also loads Google Analytics and Meta Pixel.</p>
+      <p class="fix"><b>What to do:</b> If anyone under 18 can be a user, verify their age and get verifiable consent from a parent before collecting their data, and do not track them or show them targeted ads.</p>
+      <div class="where"><code>supabase/migrations/20260901000000_init.sql:11</code> <code>supabase/migrations/20260901000000_init.sql:12</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>8. Government IDs, bank or health details kept without encryption</b></div>
+      <p class="sub">Section 8(5) and Rule 6: encryption, masking or tokens as security safeguards</p>
+      <p>Aadhaar number, PAN and bank account are stored as ordinary fields, and no encryption, hashing or masking of them was found. Anyone who reads the database reads them. UIDAI also expects Aadhaar numbers to be kept encrypted in a separate vault.</p>
+      <p class="fix"><b>What to do:</b> Encrypt these fields (or keep only the last 4 digits, or a token from the provider), and limit who can read them.</p>
+      <div class="where"><code>supabase/migrations/20260901000000_init.sql:18</code> <code>supabase/migrations/20260901000000_init.sql:19</code> <code>supabase/migrations/20260901000000_init.sql:20</code> <code>supabase/migrations/20260901000000_init.sql:21</code></div>
+    </div>
+    <div class="f medium">
+      <div class="fh"><span class="sev medium">Should fix</span><b>9. Personal data written to server logs</b></div>
+      <p class="sub">Section 8(5) and Rule 6: reasonable security safeguards</p>
+      <p>Server code writes email addresses, phone numbers, passwords or whole requests to its logs. Logs are kept for months, copied to log services and read by many people.</p>
+      <p class="fix"><b>What to do:</b> Log an ID instead of the person's details, and never log passwords or whole request bodies.</p>
+      <div class="where"><code>supabase/functions/enrol/index.ts:8</code></div>
+    </div>
+    <div class="f low">
+      <div class="fh"><span class="sev low">Check</span><b>10. Nothing deletes old personal data</b></div>
+      <p class="sub">Section 8(7): erase when the purpose is served</p>
+      <p>No retention rule or scheduled deletion was found, so personal data is kept forever unless someone deletes it by hand.</p>
+      <p class="fix"><b>What to do:</b> Decide how long each kind of data is needed, then delete or anonymise it automatically after that (keeping the logs the Rules require for one year).</p>
+      
+    </div>
+
+  <div class="keep"><h2>Personal data the code stores</h2>
+  <table class="grid"><tr><th>Kind</th><th>Field</th><th>Stored in</th><th>Found at</th></tr>
+    <tr><td class="k">Contact details</td><td>Email address <span class="sub">(email)</span></td><td>auth.users</td><td><code>src/pages/Signup.tsx:10</code></td></tr><tr><td class="k"></td><td>Phone number <span class="sub">(phone)</span></td><td>profiles</td><td><code>supabase/migrations/20260901000000_init.sql:4</code></td></tr><tr><td class="k">Identity</td><td>Name <span class="sub">(full_name)</span></td><td>profiles</td><td><code>supabase/migrations/20260901000000_init.sql:3</code></td></tr><tr><td class="k"></td><td>Name <span class="sub">(full_name)</span></td><td>students</td><td><code>supabase/migrations/20260901000000_init.sql:11</code></td></tr><tr><td class="k"></td><td>Date of birth <span class="sub">(date_of_birth)</span></td><td>students</td><td><code>supabase/migrations/20260901000000_init.sql:12</code></td></tr><tr><td class="k">Government ID</td><td>Aadhaar number <span class="sub">(aadhaar_number)</span></td><td>kyc</td><td><code>supabase/migrations/20260901000000_init.sql:18</code></td></tr><tr><td class="k"></td><td>PAN <span class="sub">(pan_number)</span></td><td>kyc</td><td><code>supabase/migrations/20260901000000_init.sql:19</code></td></tr><tr><td class="k">Financial</td><td>Bank account <span class="sub">(bank_account_number)</span></td><td>kyc</td><td><code>supabase/migrations/20260901000000_init.sql:20</code></td></tr><tr><td class="k"></td><td>Bank account <span class="sub">(ifsc)</span></td><td>kyc</td><td><code>supabase/migrations/20260901000000_init.sql:21</code></td></tr>
+  </table></div>
+
+  <div class="keep"><h2>Companies that receive data</h2>
+  <table class="grid"><tr><th>Company</th><th>What for</th><th>Based in</th><th>Personal data it receives</th><th>In the notice</th></tr>
+    <tr><td>Google Analytics<br><code>index.html:3</code></td><td>Website analytics</td><td>USA</td><td>IP address, Device identifier</td><td><span class="yes">Named</span></td></tr><tr><td>Meta Pixel<br><code>index.html:5</code></td><td>Advertising</td><td>USA</td><td>IP address, Device identifier</td><td><span class="no">Not named</span></td></tr><tr><td>OpenAI<br><code>supabase/functions/enrol/index.ts:4</code></td><td>AI model</td><td>USA</td><td>Email address, Date of birth</td><td><span class="no">Not named</span></td></tr><tr><td>Supabase<br><code>src/lib/supabase.ts:2</code></td><td>Database, login and files</td><td>The region you chose</td><td>Email address</td><td><span class="no">Not named</span></td></tr><tr><td>Slack<br><code>supabase/functions/enrol/index.ts:13</code></td><td>Team notifications</td><td>USA</td><td>Email address, Date of birth</td><td><span class="no">Not named</span></td></tr>
+  </table>
+  <p class="sub">"Personal data it receives" is what the service gets by its nature (an email service gets the address it sends to) plus what the code names next to each call. Transfers outside India are allowed unless the Government restricts a country (Section 16); each company that processes personal data for you needs a contract (Section 8(2)).</p>
+  </div>
+
+  <div class="keep"><h2>Security safeguards (Section 8(5), Rule 6)</h2>
+  <p>The Health Check of the same code found no serious or should-fix security problems.</p></div>
+
+  
+
+  <div class="keep"><h2>Penalties the Act sets (Schedule)</h2>
+  <p class="sub">Up to ₹250 crore for failing to take reasonable security safeguards; up to ₹200 crore for failing to report a breach, or for breaking the duties on children's data; up to ₹50 crore for breaking any other provision of the Act or Rules.</p></div>
+
+  <div class="keep"><h2>Not visible in code</h2><ul class="sub">
+    <li>Reporting a breach to the Data Protection Board and to the people affected within 72 hours (Rule 7), and the contracts with each company above.</li>
+    <li>Data kept only in dashboards, spreadsheets, no-code tools or databases without a schema in the code (Firestore, DynamoDB).</li>
+    <li>Which companies receive which data is read from the code around each call; settings made only in a provider's dashboard are not seen.</li>
+    
+  </ul></div>
+
+  <div class="foot">
+    This report shows what the code does with personal data, with the file and line for each statement, as evidence for the company's lawyer or Data Protection Officer. It is not legal advice and does not certify compliance with the DPDP Act.
+    Generated by Branch HQ 1.0.52 with fixed rules, on the client's own computer; the code was not sent anywhere and nothing in it was changed.
+    
+  </div>
+</body></html>
