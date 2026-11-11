@@ -31,6 +31,7 @@
     <li><span>The AI provider chosen in Settings, and only that one: <code>generativelanguage.googleapis.com</code> (Gemini), <code>api.anthropic.com</code>, <code>api.openai.com</code>, your <code>&lt;resource&gt;.openai.azure.com</code>, or <code>bedrock-runtime.&lt;region&gt;.amazonaws.com</code>. A local model (Ollama) stays on the computer.</span></li>
     <li><span>Code hosts, for pull requests and sharing branches: <code>github.com</code> and <code>api.github.com</code>, or your own GitHub Enterprise or GitLab address.</span></li>
     <li><span>Package registries while building or testing a project (<code>registry.npmjs.org</code>, <code>pypi.org</code>). A package the AI names that the project does not already list is installed only after a person allows it.</span></li>
+    <li><span>The Health Check's dependency lookup: the names and versions of the packages a project pins (never code) go to <code>registry.npmjs.org</code> for npm projects and to <code>api.osv.dev</code>, the open vulnerability database, for every other language. Off for osv.dev with <code>BRANCH_HQ_OSV=off</code>; the report then says the check was not made.</span></li>
     <li><span>Deploy and email services only when an account for them is added: Render, Vercel, Resend, or your mail server.</span></li>
   </ol>
 
