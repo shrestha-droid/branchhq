@@ -1,0 +1,71 @@
+/* The sample reports (sample-report.html, sample-dpdp-report.html) are copies of the PDF report.
+   On screen they take the site's identity; printed, they keep the report's own light styles. */
+@media print { .webnav { display: none; } }
+@media screen {
+  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); --bad: #ff9b9b; --warn: #f2c27b; --ok: #8fe3b0; }
+  body { background: #04050a; color: var(--muted); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.65; max-width: 880px; margin: 0 auto; padding: 56px 16px 96px; }
+  a { color: var(--accent-soft); }
+  b, strong { color: var(--text); font-weight: 600; }
+
+  .webnav { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 18px; }
+  .webnav a { color: inherit; text-decoration: none; }
+  .webnav a:hover { color: var(--accent-soft); }
+
+  /* Title block: a card with the purple edge the main price card has, not a solid slab. */
+  .band { background: var(--card); color: var(--text); border: 1px solid rgba(165, 163, 255, 0.35); box-shadow: inset 0 2px 0 var(--accent); border-radius: 18px; padding: 26px 26px 24px; }
+  .brand { font-size: 11px; letter-spacing: .16em; color: var(--accent-soft); opacity: 1; }
+  .band h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 6vw, 56px); line-height: 1.05; margin: 10px 0 8px; color: var(--text); overflow-wrap: anywhere; }
+  .meta { font-size: 13px; color: var(--faint); opacity: 1; }
+
+  .verdict { margin: 14px 0 0; padding: 16px 20px; border-radius: 14px; font-size: 16px; color: var(--text); background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent-soft); }
+
+  .counts { margin: 14px 0 0; gap: 12px; }
+  .count { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; font-size: 13.5px; color: var(--muted); }
+  .count b { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 40px; line-height: 1; margin-bottom: 6px; color: var(--text); }
+  .count b[style*="b3261e"] { color: var(--bad) !important; }
+  .count b[style*="b86e00"] { color: var(--warn) !important; }
+  .count b[style*="5d6075"] { color: var(--faint) !important; }
+
+  h2 { font-size: 17px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--text); margin: 52px 0 16px; padding-top: 22px; border-top: 1px solid var(--line); }
+
+  table { background: var(--card); border: 1px solid var(--line); border-radius: 14px; border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: 14px; }
+  th { font-size: 11px; letter-spacing: .1em; color: var(--faint); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child, table.grid td.k { color: var(--faint); }
+  table.grid td { color: var(--muted); }
+  table.grid code { white-space: nowrap; word-break: normal; }
+
+  /* Findings: one card each, the edge colour says how serious. */
+  .f { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--faint); border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
+  .f.high { border-left-color: var(--bad); } .f.medium { border-left-color: var(--warn); } .f.low { border-left-color: var(--faint); }
+  .fh { font-size: 16px; gap: 10px; margin-bottom: 8px; align-items: center; flex-wrap: wrap; }
+  .sev { font-size: 11px; font-weight: 600; letter-spacing: .06em; padding: 2px 10px; background: transparent; border: 1px solid; }
+  .sev.high { background: transparent; color: var(--bad); border-color: rgba(255, 155, 155, .4); }
+  .sev.medium { background: transparent; color: var(--warn); border-color: rgba(242, 194, 123, .4); }
+  .sev.low { background: transparent; color: var(--muted); border-color: var(--line); }
+  .f p { margin: 6px 0; }
+  .fix { color: var(--muted); }
+  .where { margin-top: 10px; }
+  code { font-size: 12px; color: #d9dcff; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); padding: 1px 7px; border-radius: 6px; }
+  .evidence { margin-top: 10px; }
+  .evidence pre { margin: 4px 0 10px; padding: 10px 12px; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); border-radius: 10px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: #d9dcff; }
+
+  .sub { color: var(--faint); font-size: 13px; }
+  .no { color: var(--bad); } .yes { color: var(--ok); }
+  .no, .yes { white-space: nowrap; }
+  ul { padding-left: 20px; } li { margin-bottom: 6px; }
+  .foot { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--faint); }
+
+  @media (max-width: 640px) {
+    body { padding-top: 40px; }
+    .band { padding: 22px 20px; }
+    .counts { gap: 8px; }
+    .count { padding: 14px 12px; font-size: 12.5px; }
+    .count b { font-size: 34px; }
+    /* Wide tables scroll inside their card rather than pushing the page sideways. */
+    table.grid { display: block; overflow-x: auto; }
+    table.grid td, table.grid th { min-width: 110px; }
+    td:first-child { width: 40%; }
+  }
+}
