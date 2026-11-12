@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Change Proof format</title>
+<meta name="description" content="branchhq-change-proof/1: an open format for one signed, timestamped statement per code change: what changed, what was checked, what the checks found. Anyone can verify one.">
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); }
+  body { margin: 0; background: #04050a; color: var(--text); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; line-height: 1.65; }
+  main { max-width: 820px; margin: 0 auto; padding: 64px 16px 96px; }
+  a { color: var(--accent-soft); }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 6vw, 56px); line-height: 1.05; margin: 14px 0 12px; }
+  .lead { font-size: 17px; color: var(--muted); margin: 0; }
+  h2 { font-size: 17px; font-weight: 600; margin: 48px 0 0; }
+  p, li { color: var(--muted); }
+  ul, ol { padding-left: 20px; }
+  li { margin: 6px 0; }
+  .card { margin: 16px 0 0; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 6px 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { width: 150px; padding-right: 14px; }
+  pre { margin: 14px 0 0; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: #d9dcff; }
+  .note { margin-top: 40px; color: var(--faint); font-size: 13px; }
+  @media (max-width: 600px) { td:first-child { width: auto; display: block; padding-bottom: 0; border-bottom: 0; } td { display: block; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><a href="./" style="color:inherit;text-decoration:none">← Branch HQ</a> · Open format · Version 1</div>
+  <h1>The Change Proof format</h1>
+  <p class="lead">One statement about one change to a codebase, normally a pull request: what changed, what was checked, and what the checks found, whoever or whatever wrote the code. Anyone can check one without Branch HQ: it needs SHA-256, Ed25519, an RFC 3161 timestamp check and git.</p>
+
+  <h2>What it says, and what it does not</h2>
+  <p>A proof does not say a change is correct or safe. It says which checks ran on exactly this change and what they found, in a form that cannot be edited afterwards without it showing. Free to implement: write proofs or checkers in any tool.</p>
+
+  <h2>The file</h2>
+  <pre><code>{
+  "proof":  { ...the statement... },
+  "sha256": "hex SHA-256 of the canonical statement",
+  "sig":    { "key": "fingerprint", "value": "base64 Ed25519 signature" },
+  "stamp":  { "tsa": "...", "genTime": "...", "headHash": "&lt;sha256&gt;", "recordCount": 1, "tsr": "base64 RFC 3161 response" }
+}</code></pre>
+  <p><code>sig</code> and <code>stamp</code> are optional. A proof made where no key is available, such as a pull request from a fork, is only timestamped.</p>
+
+  <h2>The statement</h2>
+  <div class="card"><table>
+    <tr><td><code>format</code></td><td><code>"branchhq-change-proof/1"</code></td></tr>
+    <tr><td><code>createdAt</code></td><td>ISO time the statement was made</td></tr>
+    <tr><td><code>tool</code></td><td>what made it, with its version</td></tr>
+    <tr><td><code>repository</code></td><td><code>name</code>, and <code>remote</code> (the origin URL, or null)</td></tr>
+    <tr><td><code>change</code></td><td><code>baseRef</code> (as given, e.g. <code>origin/main</code>), <code>base</code> (the merge-base commit), <code>head</code> (commit), <code>files</code>, <code>linesAdded</code>, <code>linesRemoved</code></td></tr>
+    <tr><td><code>change.files[]</code></td><td><code>path</code>; <code>status</code> (git's letter: A added, M changed, D deleted, T type changed); <code>oldBlob</code>, <code>newBlob</code> (git blob ids, null where the file did not exist); <code>added</code>, <code>removed</code> (lines)</td></tr>
+    <tr><td><code>commits[]</code></td><td>each non-merge commit in base..head: <code>sha</code>, <code>author</code> ("Name &lt;email&gt;"), <code>date</code>, <code>subject</code>, <code>ai</code> (AI tools the commit names)</td></tr>
+    <tr><td><code>ai</code></td><td>every AI tool named across the commits</td></tr>
+    <tr><td><code>tests</code></td><td><code>status</code> (passed, failed, already-failing, no-tests, could-not-run, not-run) and <code>command</code></td></tr>
+    <tr><td><code>breaks</code></td><td><code>tried</code>, <code>caught</code>, <code>missed[]</code> (<code>file</code>, <code>line</code>, <code>before</code>, <code>after</code>), <code>notTried</code> (why none or fewer were tried, or null)</td></tr>
+    <tr><td><code>findings</code></td><td><code>comparedWith</code> (commit), <code>new[]</code> (<code>severity</code> high, medium or low, <code>title</code>, <code>where</code>), <code>alreadyThere</code> (findings the base also had)</td></tr>
+    <tr><td><code>personalData</code></td><td><code>newFields</code>, <code>newRecipients</code>, <code>newGaps</code>, <code>closedGaps</code> (India's DPDP Act), or null when the code holds no personal data</td></tr>
+    <tr><td><code>record</code></td><td><code>lastEntry</code>: the hash of the last entry in the project's evidence record when the proof was made, or null</td></tr>
+    <tr><td><code>verdict</code></td><td>the statement in plain English</td></tr>
+  </table></div>
+
+  <h2>Terms</h2>
+  <ul>
+    <li><b>AI named in the commits:</b> the commit's author, or a <code>Co-authored-by:</code> line, names a known AI tool (Claude, GitHub Copilot, Cursor, OpenAI Codex, ChatGPT, Gemini, Devin, Aider, Windsurf, Amazon Q). Code written with AI and not labelled cannot be seen.</li>
+    <li><b>A deliberate break</b> is one small edit to one line the change added: a comparison flipped (<code>&gt;=</code> to <code>&lt;</code>), <code>&amp;&amp;</code> made <code>||</code>, <code>return true</code> made <code>return false</code>, <code>+</code> made <code>-</code>. Each is applied alone and the project's tests are run; it is caught when the tests then fail. Breaks are tried only when the tests pass on the change as it is. Catching them shows the tests check what those lines do; it does not show the code is free of faults.</li>
+    <li><b>New findings</b> are those the head has and the base does not, place by place. A place is the same when the finding's title (numbers ignored), its file and its line of code match, so code that only moved is not new.</li>
+  </ul>
+
+  <h2>Checking a proof</h2>
+  <ol>
+    <li><b>The hash.</b> Serialise <code>proof</code> canonically: object keys sorted by code point at every level, keys with no value left out, no whitespace, strings and numbers as <code>JSON.stringify</code> writes them. The SHA-256 of those UTF-8 bytes, in lowercase hex, must equal <code>sha256</code>.</li>
+    <li><b>The signature.</b> The project keeps its Ed25519 public key in its repository at <code>.branchhq/signing-key.pub</code> (PEM, SPKI). Its fingerprint is the first 16 hex characters of the SHA-256 of the key's DER bytes. <code>sig.key</code> must equal that fingerprint, and <code>sig.value</code> must be a valid signature, by that key, of the ASCII bytes of the <code>sha256</code> hex string. Get the fingerprint from the project once, by a route other than the repository: someone who can push could replace both the key and the signatures.</li>
+    <li><b>The timestamp.</b> <code>stamp.headHash</code> must equal <code>sha256</code>. <code>stamp.tsr</code> is an RFC 3161 response from <code>stamp.tsa</code> whose message imprint is the 32 bytes of <code>sha256</code> itself:
+      <pre><code>openssl ts -verify -digest &lt;sha256&gt; -in token.tsr -CAfile &lt;your CA bundle&gt;</code></pre></li>
+    <li><b>The change.</b> In a clone of the repository, this must list exactly <code>change.files</code>, with the same paths, status letters and blob ids:
+      <pre><code>git diff --raw --full-index --no-renames &lt;base&gt; &lt;head&gt;</code></pre></li>
+  </ol>
+  <p>Branch HQ's command-line tool does all four: <code>branchhq verify-proof change-proof.json --repo .</code></p>
+
+  <h2>Example (shortened)</h2>
+  <pre><code>{
+  "format": "branchhq-change-proof/1",
+  "change": { "baseRef": "origin/main", "base": "9f2c…", "head": "4b1e…",
+              "files": [{ "path": "price.js", "status": "M", "oldBlob": "e69d…", "newBlob": "1a7c…", "added": 4, "removed": 0 }] },
+  "commits": [{ "sha": "4b1e…", "author": "Asha &lt;asha@shop.in&gt;", "subject": "Free shipping over 500", "ai": ["Claude"] }],
+  "ai": ["Claude"],
+  "tests": { "status": "passed", "command": "npm test" },
+  "breaks": { "tried": 1, "caught": 0, "notTried": null,
+              "missed": [{ "file": "price.js", "line": 6, "before": "if (total &gt; 500) return 0", "after": "if (total &lt;= 500) return 0" }] },
+  "findings": { "new": [], "alreadyThere": 0 },
+  "verdict": "The project's tests pass on this change. The changed lines were broken on purpose 1 time and the tests caught 0. …"
+}</code></pre>
+
+  <h2>Versions</h2>
+  <p>A new field may be added within version 1; a checker ignores fields it does not know. A change to what an existing field means, or to how the hash is taken, is version 2.</p>
+
+  <p class="note">Branch HQ makes Change Proofs on every pull request, with the project's own tests and fixed rules; no AI model judges the change. Questions about the format: <a href="mailto:hello@branchhq.online">hello@branchhq.online</a>.</p>
+</main>
+</body>
+</html>
