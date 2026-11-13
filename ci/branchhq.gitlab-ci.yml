@@ -1,0 +1,52 @@
+# Branch HQ on every merge request. Add to your .gitlab-ci.yml with:
+#   include:
+#     - local: branchhq.gitlab-ci.yml        (after copying this file into your repository under that name)
+#
+# Checks the change against its target branch, fails when the change added a Serious problem (problems already
+# there never block), and writes a Change Proof: what changed, whether the tests pass, how many deliberate breaks of
+# the changed lines they caught, new problems and personal data, and which AI tools the commits name.
+#
+# The branchhq-seal job signs the proof and comments on the merge request. It never runs the change's code, so give
+# its secrets to it alone: add these CI/CD variables with the environment scope "branchhq-seal" (GitLab otherwise
+# hands every variable to every job, including the one that runs the change's tests):
+#   BRANCHHQ_SIGNING_KEY   from: node branchhq.mjs keygen (commit the .branchhq/signing-key.pub it writes)
+#   BRANCHHQ_GITLAB_TOKEN  a project access token with the api scope, to comment (the job token cannot)
+# Optional: .branchhq/baseline.json to accept older findings.
+branchhq:
+  stage: test
+  image: node:22
+  variables:
+    GIT_DEPTH: 0
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - curl -fsSL -o /tmp/branchhq.mjs https://github.com/shrestha-droid/branchhq/releases/latest/download/branchhq.mjs
+    - git fetch -q origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:refs/remotes/origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    # The tests run on the change, so its dependencies must be installed. Replace with your own install step.
+    - if [ -f package-lock.json ]; then npm ci; fi
+    - node /tmp/branchhq.mjs check . --out branchhq-report --compare "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" --proof --no-record --fail-on-serious
+  artifacts:
+    when: always
+    paths: [branchhq-report/]
+
+branchhq-seal:
+  stage: .post
+  image: node:22
+  needs: [branchhq]
+  environment: { name: branchhq-seal, action: prepare }
+  variables:
+    GIT_STRATEGY: none   # the change's code is not even checked out here
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+  script:
+    - curl -fsSL -o /tmp/branchhq.mjs https://github.com/shrestha-droid/branchhq/releases/latest/download/branchhq.mjs
+    - if [ -f branchhq-report/change-proof.json ]; then node /tmp/branchhq.mjs seal branchhq-report/change-proof.json || true; fi
+    - |
+      if [ -n "$BRANCHHQ_GITLAB_TOKEN" ] && [ -f branchhq-report/comment.md ]; then
+        curl -fsS -X POST -H "PRIVATE-TOKEN: $BRANCHHQ_GITLAB_TOKEN" --data-urlencode "body@branchhq-report/comment.md" \
+          "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" > /dev/null || echo "Could not comment on the merge request."
+      fi
+  artifacts:
+    when: always
+    paths: [branchhq-report/]

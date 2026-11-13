@@ -1,0 +1,110 @@
+# Branch HQ on every pull request. Copy this file to .github/workflows/branchhq.yml in your repository.
+#
+# On a pull request: checks the change against its base branch, comments only the problems the change added,
+# and fails when one of them is Serious. Problems that were already there never block. It also writes a Change
+# Proof: what changed, whether the tests pass, how many deliberate breaks of the changed lines the tests caught, new
+# problems and personal data, and which AI tools the commits name. A second job, which never runs the change's
+# code, signs it with your key and has it timestamped (check it with: node branchhq.mjs verify-proof change-proof.json).
+# On a push to the main branch: checks it and adds a chained, timestamped entry to .branchhq/evidence.jsonl
+# in this repository (check it any time with: node branchhq.mjs verify .branchhq/evidence.jsonl).
+#
+# Optional:
+#   - secret BRANCHHQ_LICENCE: your licence key, for the personal data report and modernisation plan.
+#   - .branchhq/baseline.json: a report.json from an earlier run; its findings are accepted and never reported.
+#   - signing: run `node branchhq.mjs keygen | gh secret set BRANCHHQ_SIGNING_KEY` once in your repository and
+#     commit the .branchhq/signing-key.pub it writes. Every entry is then signed with your key, so no one without
+#     it (not even someone who can push here) can rewrite the record unnoticed. Give your auditor the fingerprint.
+# The code is read on GitHub's machine; only package names and versions go to osv.dev, and only a hash to the
+# timestamp authority.
+name: Branch HQ
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+permissions:
+  contents: write        # to add the evidence entry on the main branch
+  pull-requests: write   # to comment on pull requests
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the history: needed to compare with the base branch and to search it for keys
+          # The pull request's own last commit, not the merge commit GitHub makes for it: that one is never in a
+          # clone, so a Change Proof naming it could not be checked against the repository later.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Get Branch HQ
+        run: curl -fsSL -o "$RUNNER_TEMP/branchhq.mjs" https://github.com/shrestha-droid/branchhq/releases/latest/download/branchhq.mjs
+
+      # The tests run on the change, so its dependencies must be installed. Replace with your own CI's install step.
+      - name: Install dependencies
+        if: github.event_name == 'pull_request' && hashFiles('package-lock.json') != ''
+        run: npm ci
+      # No secrets here: the change's own code (its tests) runs in this step.
+      - name: Check this change
+        if: github.event_name == 'pull_request'
+        run: node "$RUNNER_TEMP/branchhq.mjs" check . --out "$RUNNER_TEMP/branchhq-report" --compare "origin/${{ github.base_ref }}" --proof --no-record --fail-on-serious
+      - name: Comment on the pull request
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true   # pull requests from forks get a read-only token; the summary below still shows
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          f="$RUNNER_TEMP/branchhq-report/comment.md"
+          [ -f "$f" ] || exit 0
+          cat "$f" >> "$GITHUB_STEP_SUMMARY"
+          gh pr comment "$PR" --edit-last --body-file "$f" 2>/dev/null || gh pr comment "$PR" --body-file "$f"
+
+      - name: Check the main branch and add to the evidence record
+        if: github.event_name == 'push'
+        env:
+          BRANCHHQ_LICENCE: ${{ secrets.BRANCHHQ_LICENCE }}
+          BRANCHHQ_SIGNING_KEY: ${{ secrets.BRANCHHQ_SIGNING_KEY }}
+        run: node "$RUNNER_TEMP/branchhq.mjs" check . --out "$RUNNER_TEMP/branchhq-report"
+      - name: Save the evidence entry in this repository
+        if: github.event_name == 'push'
+        continue-on-error: true   # a protected branch refuses the push; the entry is still in the artifacts
+        run: |
+          cp .branchhq/evidence.jsonl "$RUNNER_TEMP/branchhq-report/"
+          git config user.name "Branch HQ"
+          git config user.email "branchhq@users.noreply.github.com"
+          git add .branchhq/evidence.jsonl
+          git commit -m "Branch HQ evidence record [skip ci]"
+          git push
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: branchhq-report
+          path: ${{ runner.temp }}/branchhq-report
+
+  # Signs the Change Proof with your key and has it timestamped. Separate from the check so the key is never where
+  # the change's code runs. Pull requests from forks get no secrets: their proof is timestamped but not signed.
+  seal:
+    needs: check
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: branchhq-report
+          path: report
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Seal the Change Proof
+        env:
+          BRANCHHQ_SIGNING_KEY: ${{ secrets.BRANCHHQ_SIGNING_KEY }}
+        run: |
+          [ -f report/change-proof.json ] || exit 0
+          curl -fsSL -o "$RUNNER_TEMP/branchhq.mjs" https://github.com/shrestha-droid/branchhq/releases/latest/download/branchhq.mjs
+          node "$RUNNER_TEMP/branchhq.mjs" seal report/change-proof.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: change-proof
+          path: report/change-proof.*
