@@ -1,6 +1,9 @@
 # Branch HQ on every merge request. Add to your .gitlab-ci.yml with:
 #   include:
-#     - local: branchhq.gitlab-ci.yml        (after copying this file into your repository under that name)
+#     - local: branchhq.gitlab-ci.yml
+# after saving this file in your repository under that name:
+#   curl -fsSL -o branchhq.gitlab-ci.yml https://branchhq.online/ci/branchhq.gitlab-ci.yml
+# Setup and what each part does: https://branchhq.online/setup.html
 #
 # Checks the change against its target branch, fails when the change added a Serious problem (problems already
 # there never block), and writes a Change Proof: what changed, whether the tests pass, how many deliberate breaks of

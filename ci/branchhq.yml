@@ -1,4 +1,6 @@
-# Branch HQ on every pull request. Copy this file to .github/workflows/branchhq.yml in your repository.
+# Branch HQ on every pull request. Save this file as .github/workflows/branchhq.yml in your repository:
+#   curl -fsSL --create-dirs -o .github/workflows/branchhq.yml https://branchhq.online/ci/branchhq.yml
+# Setup and what each part does: https://branchhq.online/setup.html
 #
 # On a pull request: checks the change against its base branch, comments only the problems the change added,
 # and fails when one of them is Serious. Problems that were already there never block. It also writes a Change

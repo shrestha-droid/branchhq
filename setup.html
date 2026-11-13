@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Branch HQ on every pull request</title>
+<meta name="description" content="Add one file to your repository and every pull request is checked: new problems are commented and block the merge, and each change gets a signed, timestamped Change Proof.">
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #5e5ce6; --accent-soft: #a5a3ff; --text: #eef1f8; --muted: #c3c8d8; --faint: #5f667d; --card: rgba(16, 19, 30, 0.72); --line: rgba(190, 205, 255, 0.11); }
+  body { margin: 0; background: #04050a; color: var(--text); font-family: Inter, -apple-system, 'Segoe UI', sans-serif; line-height: 1.65; }
+  main { max-width: 820px; margin: 0 auto; padding: 64px 16px 96px; }
+  a { color: var(--accent-soft); }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 6vw, 56px); line-height: 1.05; margin: 14px 0 12px; }
+  .lead { font-size: 17px; color: var(--muted); margin: 0; }
+  h2 { font-size: 17px; font-weight: 600; margin: 48px 0 0; }
+  p, li { color: var(--muted); }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  .steps { margin: 16px 0 0; padding: 0; list-style: none; counter-reset: n; display: grid; gap: 12px; }
+  .steps > li { min-width: 0; counter-increment: n; margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 16px 52px; position: relative; }
+  .steps > li::before { content: counter(n); position: absolute; left: 18px; top: 15px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: var(--accent-soft); }
+  .steps b { color: var(--text); font-weight: 600; }
+  pre { margin: 10px 0 0; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; overflow-x: auto; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: #d9dcff; }
+  .files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .files a { display: inline-block; text-decoration: none; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 14px; color: var(--text); }
+  .files a:hover { border-color: var(--accent); }
+  .note { margin-top: 40px; color: var(--faint); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><a href="./" style="color:inherit;text-decoration:none">← Branch HQ</a> · Setup</div>
+  <h1>Branch HQ on every pull request</h1>
+  <p class="lead">Add one file to your repository. Every pull request is then checked against its base branch: only the problems it adds are commented, a new Serious one fails the check, and the change gets a signed, timestamped <a href="proof-format.html">Change Proof</a>. Problems that were already there never block.</p>
+  <div class="files">
+    <a href="ci/branchhq.yml" download>GitHub Actions file</a>
+    <a href="ci/branchhq.gitlab-ci.yml" download>GitLab CI file</a>
+    <a href="https://github.com/shrestha-droid/branchhq/releases/latest">The branchhq command</a>
+  </div>
+
+  <h2>GitHub</h2>
+  <ol class="steps">
+    <li><b>Add the file</b> to your repository and commit it:
+      <pre><code>curl -fsSL --create-dirs -o .github/workflows/branchhq.yml https://branchhq.online/ci/branchhq.yml</code></pre></li>
+    <li><b>Check how your tests install.</b> The tests run on each change, so its dependencies are installed first. The file runs <code>npm ci</code> when there is a <code>package-lock.json</code>; for anything else, change that step to your own install command.</li>
+    <li><b>Sign the record and the proofs with your own key</b> (recommended). Once, in your repository, with Node 20+ and the GitHub CLI:
+      <pre><code>curl -fsSLO https://github.com/shrestha-droid/branchhq/releases/latest/download/branchhq.mjs
+node branchhq.mjs keygen | gh secret set BRANCHHQ_SIGNING_KEY</code></pre>
+      This stores the private key only in the secret and writes the public half to <code>.branchhq/signing-key.pub</code>: commit it. Give the fingerprint it prints to whoever audits your record; anyone who could rewrite the record without your key would have to change it.</li>
+    <li><b>Open a pull request.</b> The check comments on it, and the Change Proof and full report are in the run's artifacts.</li>
+  </ol>
+
+  <h2>GitLab</h2>
+  <ol class="steps">
+    <li><b>Add the file</b> as <code>branchhq.gitlab-ci.yml</code> and include it from your <code>.gitlab-ci.yml</code>:
+      <pre><code>curl -fsSL -o branchhq.gitlab-ci.yml https://branchhq.online/ci/branchhq.gitlab-ci.yml</code></pre>
+      <pre><code>include:
+  - local: branchhq.gitlab-ci.yml</code></pre></li>
+    <li><b>Add the variables with the environment scope <code>branchhq-seal</code></b>, so only the job that signs sees them, not the one that runs the change's code: <code>BRANCHHQ_SIGNING_KEY</code> (from <code>node branchhq.mjs keygen</code>, as above) and, to comment on merge requests, <code>BRANCHHQ_GITLAB_TOKEN</code> (a project access token with the api scope).</li>
+  </ol>
+
+  <h2>What happens on each run</h2>
+  <ul>
+    <li><b>On a pull request:</b> the change and its base branch are both checked; only what the change added is reported. The project's tests run on the change, and the changed lines are broken on purpose to see whether the tests notice. A second job, which never runs the change's code, signs the Change Proof and has it timestamped.</li>
+    <li><b>On a push to the main branch</b> (GitHub): a check is added to <code>.branchhq/evidence.jsonl</code> in your repository, chained to the entries before it, signed and timestamped. A protected branch may refuse that commit; the entry is still in the run's artifacts.</li>
+    <li><b>Already-known problems:</b> save a <code>report.json</code> from an earlier run as <code>.branchhq/baseline.json</code> and its findings are accepted, never reported.</li>
+  </ul>
+
+  <h2>Checking a proof or the record</h2>
+  <pre><code>node branchhq.mjs verify-proof change-proof.json --repo .
+node branchhq.mjs verify .branchhq/evidence.jsonl</code></pre>
+  <p>Each checks the hashes, the signature against <code>.branchhq/signing-key.pub</code>, and the timestamp; <code>--repo</code> also checks the files the proof names are exactly that change. No Branch HQ server is involved.</p>
+
+  <h2>What leaves the build machine</h2>
+  <ul>
+    <li>Your code is read on GitHub's or GitLab's machine, in your own pipeline. It is not sent to Branch HQ or to any AI model.</li>
+    <li>Package names and versions go to <a href="https://osv.dev">osv.dev</a>, to look up known vulnerabilities.</li>
+    <li>Only a hash goes to the timestamp authority (DigiCert).</li>
+  </ul>
+
+  <p class="note">The personal data report and modernisation plan need a licence key, as the secret <code>BRANCHHQ_LICENCE</code>, used on the main branch only. Questions or help setting it up: <a href="mailto:hello@branchhq.online">hello@branchhq.online</a>.</p>
+</main>
+</body>
+</html>
