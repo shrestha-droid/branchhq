@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Check</title>
+<meta name="description" content="Built your app with Lovable, Bolt or Cursor? Paste its GitHub link and see in seconds what an attacker would find first: open databases, keys in the code, injection, personal data. Free, fixed rules, no AI.">
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="offer.css">
+<style>
+  .box { display: flex; gap: 8px; margin: 28px 0 10px; flex-wrap: wrap; }
+  .box input { flex: 1 1 260px; min-width: 0; font: 15px Inter, system-ui, sans-serif; color: #e6e8f0; background: #0b0d16; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; padding: 13px 14px; outline: none; }
+  .box input:focus { border-color: #5e5ce6; }
+  .box button { flex: 0 0 auto; }
+  .hint { color: #8b91a7; font-size: 13.5px; }
+  #status { margin-top: 18px; color: #8b91a7; font-size: 14.5px; min-height: 1.6em; }
+  #result { display: none; margin-top: 18px; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: #0b0d16; padding: 22px 20px; }
+  .top { display: flex; gap: 18px; align-items: center; }
+  .grade { flex: 0 0 auto; width: 74px; height: 74px; border-radius: 14px; display: grid; place-items: center; font: 46px/1 "Instrument Serif", Georgia, serif; color: #fff; background: #24262f; }
+  .grade.g-A, .grade.g-B { background: #5e5ce6; } .grade.g-C { background: #6b5a2e; } .grade.g-D, .grade.g-F { background: #7a2e3a; }
+  .verdict { font: 22px/1.25 "Instrument Serif", Georgia, serif; color: #f2f3f8; margin: 0; }
+  .meta { color: #6b7185; font-size: 13px; margin: 4px 0 0; word-break: break-all; }
+  .counts { display: flex; gap: 18px; flex-wrap: wrap; margin: 16px 0 4px; font-size: 13.5px; color: #8b91a7; }
+  .counts b { color: #f2f3f8; font-weight: 600; margin-right: 4px; font-variant-numeric: tabular-nums; }
+  .worst { margin-top: 16px; border-left: 2px solid #c75b6c; padding: 2px 0 2px 14px; }
+  .worst.medium { border-color: #c9a24a; }
+  .worst h3 { margin: 0; font: 600 15px Inter, sans-serif; color: #f2f3f8; }
+  .worst p { margin: 6px 0 0; color: #b4b9cb; font-size: 14px; }
+  .worst pre { margin: 8px 0 0; padding: 9px 11px; background: #05060c; border-radius: 8px; overflow-x: auto; font: 12.5px ui-monospace, Menlo, monospace; color: #c5cadb; white-space: pre; }
+  .worst .at { font: 12.5px ui-monospace, Menlo, monospace; color: #6b7185; word-break: break-all; }
+  ul.items { list-style: none; padding: 0; margin: 16px 0 0; border-top: 1px solid rgba(255,255,255,.07); }
+  ul.items li { display: flex; gap: 10px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: 14px; color: #d6d9e4; }
+  ul.items li span { flex: 0 0 auto; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6b7185; width: 76px; }
+  ul.items li.high::before, ul.items li.medium::before, ul.items li.low::before { content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; background: #5d6377; }
+  ul.items li.high::before { background: #e0697d; } ul.items li.medium::before { background: #d9b24e; }
+  .locked { color: #6b7185; font-size: 13px; margin-top: 10px; }
+  .pay { margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.08); }
+  .pay h3 { margin: 0; font: 22px/1.2 "Instrument Serif", Georgia, serif; color: #f2f3f8; font-weight: 400; }
+  .badge-code { margin-top: 10px; }
+  .badge-code input { width: 100%; box-sizing: border-box; font: 12px ui-monospace, Menlo, monospace; color: #c5cadb; background: #05060c; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 9px 10px; }
+  @media (max-width: 520px) { .top { align-items: flex-start; } .grade { width: 58px; height: 58px; font-size: 36px; } .verdict { font-size: 19px; } ul.items li span { width: 64px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><a href="./">&larr; Branch HQ</a> · Launch Check</div>
+  <h1>See what an attacker would find in your app first.</h1>
+  <p class="lead">Built it with Lovable, Bolt, Cursor or by hand? Paste the GitHub link. In seconds you get a grade and the worst problem, with the exact line of code. Free, fixed rules, no AI.</p>
+
+  <form class="box" id="checkForm">
+    <input id="url" name="url" placeholder="https://github.com/you/your-app" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url" required aria-label="GitHub repository link">
+    <button class="btn" type="submit" id="go">Check it</button>
+  </form>
+  <p class="hint">Public GitHub repositories only. The code is copied, read, and deleted when the check ends; nothing in it is run. Private code? The <a href="./#install">desktop app</a> checks it without it ever leaving your computer.</p>
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <section id="result" aria-live="polite">
+    <div class="top">
+      <div class="grade" id="grade">–</div>
+      <div><p class="verdict" id="verdict"></p><p class="meta" id="meta"></p></div>
+    </div>
+    <div class="counts" id="counts"></div>
+    <div id="worst"></div>
+    <ul class="items" id="items"></ul>
+    <p class="locked" id="locked"></p>
+
+    <div class="pay" id="pay">
+      <h3>The full report, ₹799</h3>
+      <p class="hint" style="margin-top:6px">Every problem with where it is, why it matters and how to fix it, plus a fix instruction you can paste straight into Lovable, Bolt or Cursor. One free re-check within 30 days, and the badge once it passes. Outside India: $9.</p>
+      <form class="request" action="https://formsubmit.co/shresthakp07@gmail.com" method="POST" style="margin-top:12px">
+        <input type="hidden" name="_subject" value="Branch HQ: Launch Check full report">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://branchhq.online/thanks.html">
+        <input type="hidden" name="need" value="Launch Check full report (₹799 / $9)">
+        <input type="hidden" name="repository" id="repoField">
+        <input type="hidden" name="result" id="resultField">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <label>Your email<input name="email" type="email" required autocomplete="email"></label>
+        <button type="submit" class="btn">Get the full report</button>
+        <p class="small">We email a payment link (UPI or card) and send the report within a day of payment.</p>
+      </form>
+    </div>
+
+    <div class="pay" id="passed" style="display:none">
+      <h3>Passed. Show it.</h3>
+      <p class="hint" style="margin-top:6px">Add the badge to your README. It links to a page that says what was checked and when, and nothing else.</p>
+      <div class="badge-code"><input id="badgeCode" readonly onclick="this.select()"></div>
+    </div>
+  </section>
+
+  <h2>What it checks</h2>
+  <ul class="checks">
+    <li><strong>Keys and secrets</strong> written into the code: Supabase admin keys, payment and AI keys, database passwords.</li>
+    <li><strong>Databases anyone can read</strong>: Supabase tables without row-level security, open Firebase rules.</li>
+    <li><strong>Injection and unsafe calls</strong>: SQL and NoSQL injection, scripts in other people's pages, commands built from what visitors type.</li>
+    <li><strong>Other people's records</strong> reachable by changing an ID, and prices or order status taken from the browser.</li>
+    <li><strong>Personal data</strong>: what is collected, which companies it is sent to, and whether people can delete it (India's DPDP Act).</li>
+    <li><strong>Libraries with known flaws</strong>, checked against the public vulnerability database.</li>
+  </ul>
+
+  <div class="stat">
+    <b>35 of 94</b>
+    <p>Lovable apps we checked had at least one serious problem. Every one was read by hand before it was counted. <small>The same rules have been measured on <b>137 public codebases</b>, over 16 million lines of code.</small></p>
+  </div>
+
+  <p class="note">A pass means these checks found nothing serious on that date. It is not a guarantee, a certificate or a penetration test. Need a company's code reviewed, with a call and a re-check? See the <a href="check.html">security review</a> and the <a href="dpdp.html">DPDP evidence pack</a>.</p>
+</main>
+<script>
+(() => {
+  const API = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? 'http://localhost:8787' : 'https://branchhq-check.onrender.com'
+  const $ = id => document.getElementById(id)
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+  const area = { Code: 'Code', Privacy: 'Privacy', Libraries: 'Library', Tests: 'Tests' }
+  const q = new URLSearchParams(location.search).get('repo')
+  if (q) $('url').value = q
+  $('checkForm').addEventListener('submit', async e => {
+    e.preventDefault()
+    const url = $('url').value.trim()
+    $('go').disabled = true
+    $('result').style.display = 'none'
+    $('status').textContent = 'Copying and reading the code…'
+    // The free server sleeps when idle; the first check of the hour can take most of a minute to start.
+    const slow = setTimeout(() => { $('status').textContent = 'Waking the checker up. The first check after a quiet spell takes up to a minute.' }, 6000)
+    try {
+      const res = await fetch(API + '/api/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) })
+      const d = await res.json()
+      if (!res.ok) { $('status').textContent = d.error || 'The check could not finish.'; return }
+      show(d)
+      $('status').textContent = ''
+      history.replaceState(null, '', '?repo=' + encodeURIComponent(d.repo))
+    } catch {
+      $('status').textContent = 'The checker could not be reached. Try again in a minute.'
+    } finally { clearTimeout(slow); $('go').disabled = false }
+  })
+  function show(d) {
+    $('grade').textContent = d.grade
+    $('grade').className = 'grade g-' + d.grade
+    $('verdict').textContent = d.verdict
+    $('meta').textContent = d.repo + ' · ' + d.files + ' files' + (d.stack.length ? ' · ' + d.stack.join(', ') : '') + ' · commit ' + d.commit.slice(0, 7)
+    $('counts').innerHTML = '<span><b>' + d.counts.serious + '</b>serious</span><span><b>' + d.counts.should + '</b>worth fixing</span><span><b>' + d.counts.minor + '</b>minor</span>'
+    const w = d.worst
+    const sev = w && d.items.find(i => i.title === w.title)?.severity
+    $('worst').innerHTML = w ? '<div class="worst ' + esc(sev || '') + '"><h3>' + esc(w.title) + '</h3><p>' + esc(w.why) + '</p>'
+      + (w.where.length ? '<p class="at">' + w.where.map(esc).join(' · ') + '</p>' : '') + (w.code ? '<pre>' + esc(w.code) + '</pre>' : '')
+      + '<p><b style="color:#e6e8f0;font-weight:500">Fix:</b> ' + esc(w.fix) + '</p></div>' : ''
+    const rest = d.items.filter(i => !w || i.title !== w.title)
+    $('items').innerHTML = rest.map(i => '<li class="' + i.severity + '"><span>' + area[i.area] + '</span>' + esc(i.title) + '</li>').join('')
+    $('locked').textContent = rest.length ? 'Where each of these is, and how to fix it, is in the full report.' : ''
+    $('repoField').value = 'https://github.com/' + d.repo
+    $('resultField').value = d.grade + ': ' + d.verdict
+    $('pay').style.display = d.counts.serious + d.counts.should > 0 ? '' : 'none'
+    $('passed').style.display = d.passed ? '' : 'none'
+    $('badgeCode').value = '[![Branch HQ check](' + API + '/badge/github/' + d.repo + '.svg)](' + API + '/r/github/' + d.repo + ')'
+    $('result').style.display = 'block'
+    $('result').scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+})()
+</script>
+</body>
+</html>
